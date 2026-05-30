@@ -1,0 +1,2492 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DAPO-HUB - Portal Integrasi Operator Dapodik & IT</title>
+    
+    <!-- Meta Tags Tambahan untuk Kemampuan PWA / iOS Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DAPO-HUB">
+    <meta name="theme-color" content="#2563eb">
+    <link class="apple-touch-icon" rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2210/2210143.png">
+    
+    <!-- Link Manifest PWA -->
+    <link rel="manifest" href="./manifest.json" id="pwa-manifest-link">
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2210/2210143.png">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <!-- HTML5-QRCode Scanner Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <!-- CryptoJS Library untuk Enkripsi Penyimpanan Lokal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <!-- Google Fonts: Space Grotesk & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['Space Grotesk', 'monospace'],
+            },
+            colors: {
+              primary: {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0f172a',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .font-space { font-family: 'Space Grotesk', sans-serif; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+      .dark ::-webkit-scrollbar-thumb { background: #475569; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      
+      /* Animasi Transisi Sub-Tab */
+      .sub-tab-content { transition: all 0.3s ease-in-out; }
+
+      /* Kustom Scrollbar Independen Menu Asisten */
+      .custom-scroll {
+        max-height: 290px !important;
+        overflow-y: auto !important;
+        padding-right: 4px;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
+      }
+      .custom-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scroll::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 20px;
+      }
+      .dark .custom-scroll::-webkit-scrollbar-thumb {
+        background-color: #475569;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300 relative">
+    
+    <input type="file" id="import-file-input" class="hidden" accept=".json" onchange="importBackupData(event)"/>
+
+    <!-- HEADER BAR -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <div class="bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 p-2 sm:p-2.5 rounded-xl shadow-lg shadow-blue-500/20 text-white">
+            <i class="fa-solid fa-server text-sm sm:text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1 text-[10px]">
+              DAPO-HUB <span class="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200 text-[10px] px-1.5 py-0.5 rounded font-mono font-bold">Pro v 2.0</span>
+            </h1>
+            <p class="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400">UPT SPF SMP Negeri 3 Makassar</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <div class="hidden sm:flex flex-col items-end font-mono text-[10px] md:text-xs text-slate-500 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 pr-3 md:pr-4">
+            <span id="header-date" class="font-medium text-slate-400">Memuat tanggal...</span>
+            <span id="header-time" class="font-bold text-slate-700 dark:text-slate-200">WITA</span>
+          </div>
+          <button onclick="toggleTheme()" class="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all duration-200">
+            <i id="theme-icon" class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- PROFIL & ACTION BAR -->
+    <section class="relative overflow-hidden pt-6 pb-4 bg-gradient-to-b from-blue-500/10 via-indigo-500/5 to-transparent dark:from-blue-950/20">
+      <div class="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 rounded-3xl p-4 sm:p-6 md:p-8 shadow-xl shadow-slate-200/40 dark:shadow-none backdrop-blur-sm relative overflow-hidden">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+            <div class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 sm:gap-5 w-full lg:w-auto">
+              <div class="relative flex-shrink-0">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-sky-400 via-blue-600 to-indigo-600 p-1 shadow-xl">
+                  <div class="w-full h-full rounded-[12px] bg-slate-950 flex flex-col items-center justify-center text-white">
+                    <i class="fa-solid fa-user-tie text-3xl text-sky-400"></i>
+                    <span class="text-[8px] font-bold text-slate-400 font-mono tracking-widest mt-1">SPENTIG</span>
+                  </div>
+                </div>
+                <span id="status-badge" class="absolute -bottom-1 -right-1 block h-5 w-5 rounded-full ring-4 ring-white dark:ring-slate-800 bg-emerald-500 flex items-center justify-center text-[10px] text-white font-bold transition-colors duration-300" title="Koneksi Aktif">
+                  <i id="status-badge-icon" class="fa-solid fa-hard-drive"></i>
+                </span>
+              </div>
+              <div class="w-full">
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-space">Rahmat Rahim</h2>
+                  <!-- LENCANA STATUS UTAMA (ONLINE / OFFLINE) -->
+                  <span id="status-text-badge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200/50 transition-colors duration-300">
+                    <span id="status-pulse-dot" class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span id="status-label">Online</span>
+                  </span>
+                </div>
+                <p class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 mt-1">Operator Dapodik & IT Support</p>
+                <div class="flex flex-wrap justify-center sm:justify-start gap-y-1.5 gap-x-4 mt-3 text-[11px] text-slate-500 dark:text-slate-400 font-medium font-space">
+                  <span onclick="copyText('UPT SPF SMP Negeri 3 Makassar', 'Nama sekolah disalin!')" class="cursor-pointer hover:text-blue-500 transition"><i class="fa-solid fa-school text-blue-500"></i> UPT SPF SMPN 3 Makassar</span>
+                  <span onclick="copyText('40312436', 'NPSN disalin!')" class="cursor-pointer hover:text-blue-500 transition font-mono"><i class="fa-solid fa-fingerprint text-sky-500"></i> 40312436</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-center gap-2 w-full lg:w-auto flex-wrap">
+              <a href="http://localhost:5774" target="_blank" class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md hover:bg-blue-700 transition" title="Dapodik Lokal"><i class="fa-solid fa-laptop text-lg"></i></a>
+              <button onclick="openAddLinkModal()" class="w-11 h-11 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md hover:bg-emerald-700 transition" title="Tambah Link"><i class="fa-solid fa-plus text-lg"></i></button>
+              <button onclick="resetToDefaultLinks()" class="w-11 h-11 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-md hover:bg-amber-600 transition" title="Reset Links"><i class="fa-solid fa-arrows-rotate text-lg"></i></button>
+              <button onclick="exportBackupData()" class="w-11 h-11 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md hover:bg-indigo-700 transition" title="Export JSON"><i class="fa-solid fa-file-export text-lg"></i></button>
+              <button onclick="triggerImportData()" class="w-11 h-11 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md hover:bg-teal-700 transition" title="Import JSON"><i class="fa-solid fa-file-import text-lg"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 mt-6">
+        
+        <!-- KOLOM KIRI (Kategori - 2/12) -->
+        <div class="lg:col-span-2 lg:sticky lg:top-20 h-fit space-y-6">
+          <div class="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-md">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-blue-500"></i> Kategori</h3>
+            <div class="flex lg:flex-col overflow-x-auto no-scrollbar gap-2 lg:gap-1.5" id="category-tabs">
+              <button onclick="selectCategory('semua')" data-category="semua" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow-md"><span>Semua</span> <span id="badge-semua" class="ml-1.5 bg-white/20 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('utama')" data-category="utama" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span>Dapodik</span> <span id="badge-utama" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('verval')" data-category="verval" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span>Verval</span> <span id="badge-verval" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('keuangan')" data-category="keuangan" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span>Keuangan</span> <span id="badge-keuangan" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('guru')" data-category="guru" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span>GTK</span> <span id="badge-guru" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('kepegawaian')" data-category="kepegawaian" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span>ASN</span> <span id="badge-kepegawaian" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('2fa_auth')" data-category="2fa_auth" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved text-blue-500"></i> 2FA Hub</span> <span id="badge-2fa_auth" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('ujian')" data-category="ujian" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span>Asesmen/ANBK</span> <span id="badge-ujian" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+              <button onclick="selectCategory('daerah')" data-category="daerah" class="category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-3 py-2 text-[11px] font-bold rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"><span>Portal Daerah</span> <span id="badge-daerah" class="ml-1.5 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] font-mono">0</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KOLOM TENGAH: SEARCH & LINKS -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- SEARCH BAR -->
+          <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-md">
+            <div class="relative w-full">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input type="text" id="search-input" oninput="filterLinksOrKeys()" placeholder="Cari tautan situs atau nama akun 2FA..." class="block w-full pl-11 pr-12 py-3 text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white" />
+              <button id="clear-search" onclick="clearSearchInput()" class="hidden absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-slate-600 transition">
+                <i class="fa-solid fa-circle-xmark text-lg"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- PANEL 2FA AUTHENTICATOR -->
+          <div id="panel-2fa-main-auth" class="hidden space-y-6">
+            <div class="flex flex-col gap-6">
+              
+              <!-- MENU 1: TOKEN OTP AKTIF -->
+              <div class="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-md space-y-4">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700">
+                  <h3 class="font-space font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-key text-blue-500 animate-pulse"></i> Token OTP Aktif
+                  </h3>
+                  <!-- PROGRESS BAR SISA DETIK OTP -->
+                  <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 dark:text-slate-500">
+                    <i class="fa-solid fa-arrows-rotate animate-spin-slow"></i>
+                    <span>Sisa: <span id="otp-timer-text" class="font-mono text-blue-600 dark:text-blue-400 font-black">30</span>s</span>
+                    <div class="w-12 h-1.5 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden">
+                      <div id="otp-progress-bar" class="h-full bg-blue-600 rounded-full transition-all duration-1000" style="width: 100%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CONTAINER GRID TOKEN OTP -->
+                <div id="main-authenticator-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2 gap-4">
+                  <!-- JS Rendered -->
+                </div>
+
+                <!-- CATATAN KAKI KEAMANAN INDAH -->
+                <div class="pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+                  <span class="flex items-center gap-1"><i class="fa-solid fa-lock text-emerald-500"></i> Seluruh data 2FA dienkripsi secara lokal di browser anda.</span>
+                  <span class="font-mono text-[9px]">Sistem TOTP RFC 6238</span>
+                </div>
+              </div>
+
+              <!-- MENU 2: SETUP KUNCI & PEMINDAI QR -->
+              <div class="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-md space-y-5">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700">
+                  <h3 class="font-space font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-qrcode text-emerald-500"></i> Setup & Pindai 2FA
+                  </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- QR CODE CAMERA SCANNER WINDOW & UPLOAD FOTO QR CODE -->
+                  <div class="space-y-3 bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800">
+                    <div class="flex flex-col gap-2">
+                      <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-camera text-emerald-500"></i> Pindai / Unggah QR Code
+                      </h4>
+                      <div class="grid grid-cols-2 gap-2">
+                        <!-- Tombol Scan Kamera -->
+                        <button id="btn-toggle-scan" onclick="toggleQrScanner()" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded-xl transition flex items-center justify-center gap-1">
+                          <i class="fa-solid fa-camera"></i> <span id="text-btn-scan">Scan Kamera</span>
+                        </button>
+                        <!-- Tombol Upload Berkas Foto QR -->
+                        <button onclick="triggerQrFileInput()" class="px-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold rounded-xl transition flex items-center justify-center gap-1">
+                          <i class="fa-solid fa-upload"></i> Unggah Foto
+                        </button>
+                        <!-- Input berkas foto QR tersembunyi -->
+                        <input type="file" id="qr-file-input" accept="image/*" class="hidden" onchange="scanQrFile(event)" />
+                      </div>
+                    </div>
+                    <div id="qr-reader-wrapper" class="hidden">
+                      <div id="qr-reader" class="overflow-hidden rounded-xl border-2 border-dashed border-emerald-500 bg-black max-w-full mx-auto" style="width: 100%; min-height: 200px;"></div>
+                    </div>
+                  </div>
+
+                  <!-- INPUT FORM 2FA BARU -->
+                  <div class="p-4 bg-slate-50/50 dark:bg-slate-900/30 rounded-2xl border border-slate-200/40 dark:border-slate-700/50 space-y-3">
+                    <h4 class="text-xs font-black uppercase text-slate-400">Tambah Kunci Manual</h4>
+                    <div class="space-y-3 text-xs">
+                      <div class="grid grid-cols-2 gap-2">
+                        <div>
+                          <label class="block text-[9px] font-black uppercase text-slate-400 mb-1">Layanan</label>
+                          <input type="text" id="auth-main-label" placeholder="e-Kinerja, MyASN" class="w-full text-xs p-2.5 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 outline-none focus:ring-1 focus:ring-blue-500" />
+                        </div>
+                        <div>
+                          <label class="block text-[9px] font-black uppercase text-slate-400 mb-1">User/Email</label>
+                          <input type="text" id="auth-main-user" placeholder="rahmat@gmail.com" class="w-full text-xs p-2.5 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500" />
+                        </div>
+                      </div>
+                      <div>
+                        <label class="block text-[9px] font-black uppercase text-slate-400 mb-1">Kunci Rahasia (Secret Key)</label>
+                        <input type="text" id="auth-main-key" placeholder="Contoh: JBSWY3DPEHPK3PXP" class="w-full text-xs p-2.5 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white font-mono outline-none focus:ring-1 focus:ring-blue-500" />
+                      </div>
+                      <button onclick="save2FaKeyFromMain()" class="w-full py-2.5 bg-blue-600 text-white text-xs font-extrabold rounded-xl transition shadow-md shadow-blue-500/10 flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-save"></i> Simpan Kunci Baru
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- RENDER LINK CARD -->
+          <div id="panel-links-main-wrapper" class="space-y-6">
+            <div id="dynamic-links-wrapper" class="space-y-6 sm:space-y-8"></div>
+          </div>
+
+          <div id="no-results-message" class="hidden text-center py-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-8">
+            <div class="text-slate-300 text-5xl mb-4"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <h4 class="text-lg font-bold dark:text-white">Tautan Tidak Ditemukan</h4>
+            <p class="text-sm text-slate-500 mt-1 max-w-sm mx-auto">Kami tidak dapat menemukan tautan yang sesuai dengan pencarian Anda.</p>
+          </div>
+        </div>
+
+        <!-- KOLOM KANAN: ASISTEN OPERATOR (3/12) -->
+        <div class="lg:col-span-3 lg:sticky lg:top-20 h-fit space-y-6">
+          
+          <!-- WIDGET BATAS CUT-OFF DAPODIK & TUGAS AKTIF TERPADU -->
+          <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-200/60 dark:border-slate-700/60 shadow-md relative overflow-hidden">
+            <div class="absolute right-0 bottom-0 opacity-5 translate-x-4 translate-y-4 text-slate-400 dark:text-slate-300">
+              <i class="fa-solid fa-hourglass-half text-9xl"></i>
+            </div>
+            <div class="relative z-10 space-y-4">
+              <div>
+                <span class="text-[9px] font-black tracking-widest bg-blue-50 dark:bg-slate-900 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-full uppercase">BATAS SINKRONISASI</span>
+                <h3 class="font-space font-extrabold text-base tracking-wide flex items-center gap-2 mt-3 mb-1 text-rose-600 dark:text-rose-400">
+                  <i class="fa-solid fa-clock-rotate-left animate-pulse"></i> Cut-Off BOS Reguler 2026
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Batas akhir penarikan data siswa untuk dana BOS sekolah.</p>
+              </div>
+              
+              <!-- Real-time Countdown Grid -->
+              <div class="grid grid-cols-4 gap-2 text-center">
+                <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-2">
+                  <span id="countdown-days" class="block font-space font-black text-xl leading-tight">--</span>
+                  <span class="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">Hari</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-2">
+                  <span id="countdown-hours" class="block font-space font-black text-xl leading-tight">--</span>
+                  <span class="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">Jam</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-2">
+                  <span id="countdown-minutes" class="block font-space font-black text-xl leading-tight">--</span>
+                  <span class="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">Menit</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-2">
+                  <span id="countdown-seconds" class="block font-space font-black text-xl leading-tight text-blue-600 dark:text-blue-400">--</span>
+                  <span class="text-[8px] uppercase tracking-wider font-extrabold text-slate-400">Detik</span>
+                </div>
+              </div>
+
+              <!-- PENYATUAN NOTIFIKASI TUGAS AKTIF SINKRONISASI -->
+              <div id="countdown-active-task-box" class="pt-3.5 border-t border-slate-100 dark:border-slate-700/60 space-y-2">
+                <span class="text-[9px] font-black tracking-widest text-blue-600 dark:text-blue-400 uppercase block">🎯 Fokus Utama Saat Ini</span>
+                <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-start justify-between gap-3 shadow-xs">
+                  <span id="countdown-active-task-text" class="text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-300 break-words flex-1">Memuat tugas aktif...</span>
+                  <button id="countdown-active-task-btn" class="text-blue-600 hover:text-emerald-500 font-bold text-xs flex-shrink-0 transition-colors hidden" title="Tandai Selesai">
+                    <i class="fa-solid fa-circle-check text-base"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-2 text-[10px] text-slate-500 dark:text-slate-400 font-bold">
+                <span>Target: 31 Agustus 2026</span>
+                <span class="flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span> Live Countdown
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL TAB ASISTEN OPERATOR -->
+          <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-md overflow-hidden">
+            <!-- Header Tab Global -->
+            <div class="flex border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 p-1.5 gap-1">
+              <button id="btn-tab-agenda" onclick="switchAsistenTab('agenda')" class="flex-1 py-2 px-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-blue-600 shadow-sm"><i class="fa-solid fa-clipboard-list"></i> Agenda</button>
+              <button id="btn-tab-kalender" onclick="switchAsistenTab('kalender')" class="flex-1 py-2 px-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-800"><i class="fa-solid fa-calendar-days"></i> Jadwal</button>
+              <button id="btn-tab-alat" onclick="switchAsistenTab('alat')" class="flex-1 py-2 px-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-800"><i class="fa-solid fa-screwdriver-wrench"></i> Alat IT</button>
+            </div>
+
+            <!-- ISI PANEL -->
+            <div class="p-4 space-y-4">
+              
+              <!-- PANEL AGENDA & MEMO TERPADU -->
+              <div id="panel-tab-agenda" class="space-y-4">
+                <!-- Switcher Internal Slide Samping -->
+                <div class="flex p-1 bg-slate-100 dark:bg-slate-900 rounded-xl gap-1">
+                  <button id="btn-sub-tugas" onclick="switchSubTab('tugas')" class="flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all bg-white dark:bg-slate-800 text-blue-600 shadow-xs">DAFTAR TUGAS</button>
+                  <button id="btn-sub-memo" onclick="switchSubTab('memo')" class="flex-1 py-1.5 text-[10px] font-bold rounded-lg transition-all text-slate-500">BUKU SAKU (MEMO)</button>
+                </div>
+
+                <!-- Konten Sub-Tab 1: Tugas Pekerjaan dengan Scrollbar Independen -->
+                <div id="sub-panel-tugas" class="sub-tab-content space-y-4">
+                  <div class="flex justify-between items-center">
+                    <h4 class="font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-list-check text-blue-500"></i> Agenda Kerja</h4>
+                    <select id="agenda-filter" onchange="renderAgenda()" class="text-[9px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded p-1 font-bold outline-none"><option value="semua">Semua</option><option value="belum">Belum</option><option value="selesai">Selesai</option></select>
+                  </div>
+                  <!-- Tinggi Maksimal Spesifik dengan overflow scroll kustom mandiri -->
+                  <div class="custom-scroll space-y-2.5" id="agenda-list-container"></div>
+                  <button onclick="openAddAgendaModal()" class="w-full py-2.5 bg-blue-600 text-white rounded-xl text-[11px] font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2"><i class="fa-solid fa-plus-circle"></i> Tambah Tugas Baru</button>
+                </div>
+
+                <!-- Konten Sub-Tab 2: Buku Saku / Memo dengan Scrollbar Independen -->
+                <div id="sub-panel-memo" class="sub-tab-content hidden space-y-4">
+                  <div class="flex justify-between items-center">
+                    <h4 class="font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-sticky-note text-amber-500"></i> Catatan Cepat (Buku Saku)</h4>
+                  </div>
+                  <!-- Tinggi Maksimal Spesifik dengan overflow scroll kustom mandiri -->
+                  <div id="quick-notes-list" class="custom-scroll space-y-2.5"></div>
+                  <button onclick="openAddMemoModal()" class="w-full py-2.5 bg-blue-600 text-white rounded-xl text-[11px] font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> Tambah Memo Baru
+                  </button>
+                </div>
+              </div>
+
+              <!-- PANEL KALENDER -->
+              <div id="panel-tab-kalender" class="hidden space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-calendar-check text-blue-500"></i> Kalender Kerja</span>
+                  <div class="flex items-center space-x-1">
+                    <button onclick="prevMonth()" class="w-6 h-6 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-900 text-[10px] transition"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button onclick="nextMonth()" class="w-6 h-6 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-900 text-[10px] transition"><i class="fa-solid fa-chevron-right"></i></button>
+                  </div>
+                </div>
+                <div class="text-center font-black text-[11px] uppercase tracking-wider text-blue-600" id="calendar-month-year">...</div>
+                <div class="grid grid-cols-7 gap-1 text-[9px] font-black text-slate-400 uppercase text-center">
+                  <div class="text-rose-500 font-bold">M</div><div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div class="text-rose-400 font-bold">S</div>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold" id="calendar-days-grid"></div>
+                <div id="calendar-event-display" class="pt-3 border-t border-slate-100 dark:border-slate-700">
+                   <p class="text-[10px] text-slate-400 italic"><i class="fa-solid fa-info-circle text-blue-400"></i> Ketuk tanggal untuk jadwal.</p>
+                </div>
+              </div>
+
+              <!-- PANEL ALAT IT -->
+              <div id="panel-tab-alat" class="hidden space-y-4">
+                <!-- INTEGRASI BARU: PWA LOCAL DEPLOYMENT KIT -->
+                <div class="bg-blue-50/70 dark:bg-blue-950/20 p-3 rounded-2xl border border-blue-200/50 dark:border-blue-800/40 space-y-2.5">
+                  <h5 class="text-[11px] font-black text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-nodes text-blue-500"></i> PWA Offline Deployment Kit
+                  </h5>
+                  <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Unduh berkas konfigurasi berikut untuk ditaruh dalam satu folder bersama <code class="font-mono bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-blue-600">index.html</code> pada server lokal Anda agar DAPO-HUB menjadi aplikasi instalan yang super cepat & luring.
+                  </p>
+                  <div class="grid grid-cols-2 gap-2">
+                    <button onclick="downloadPwaFile('manifest')" class="py-1.5 bg-blue-600 text-white rounded-xl text-[10px] font-bold hover:bg-blue-700 transition flex items-center justify-center gap-1">
+                      <i class="fa-solid fa-file-code"></i> Unduh Manifest
+                    </button>
+                    <button onclick="downloadPwaFile('sw')" class="py-1.5 bg-indigo-600 text-white rounded-xl text-[10px] font-bold hover:bg-indigo-700 transition flex items-center justify-center gap-1">
+                      <i class="fa-solid fa-gears"></i> Unduh sw.js
+                    </button>
+                  </div>
+                  <div class="text-[9px] text-center pt-1 flex items-center justify-center gap-1 text-slate-400 dark:text-slate-500 font-medium">
+                    <span id="pwa-sw-status-dot" class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-pulse"></span>
+                    <span>Status Service Worker: <span id="pwa-sw-status-text" class="font-semibold">Mendeteksi...</span></span>
+                  </div>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-900/30 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+                  <h5 class="text-[11px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-calculator text-blue-500"></i> Validasi Usia SPMB</h5>
+                  <div class="flex gap-2"><input type="date" id="ppdb-dob-input" onchange="calculatePpdbAge()" class="flex-1 text-[10px] p-2 rounded-xl border dark:bg-slate-800 dark:text-white outline-none" /><button onclick="calculatePpdbAge()" class="bg-blue-600 text-white text-[10px] px-3 font-bold rounded-xl transition">Hitung</button></div>
+                  <div id="ppdb-age-result" class="p-2 bg-white dark:bg-slate-900/80 rounded-xl border hidden text-[10px] leading-relaxed"></div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900/30 p-3 rounded-2xl border border-slate-200/50 space-y-2.5">
+                   <div class="flex justify-between items-center"><h5 class="text-[11px] font-bold flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-500"></i> Broadcast WA</h5><button onclick="openTemplatesModal()" class="text-[9px] text-blue-600 hover:underline font-bold">KELOLA</button></div>
+                   <input type="text" id="wa-recipient-name" placeholder="Nama Guru" class="w-full text-[10px] p-2 rounded-xl border bg-white dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-1 focus:ring-blue-500" />
+                   <select id="wa-template-select" class="w-full text-[10px] p-2 rounded-xl border bg-white dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none font-bold cursor-pointer focus:ring-1 focus:ring-blue-500"></select>
+                   <div class="flex gap-2"><button onclick="copyBroadcastMessage()" class="flex-1 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border rounded-xl text-[10px] font-bold"><i class="fa-solid fa-copy"></i> Salin</button><button onclick="sendBroadcastWhatsApp()" class="flex-1 py-1.5 bg-emerald-600 text-white rounded-xl text-[10px] font-bold"><i class="fa-brands fa-whatsapp"></i> Kirim</button></div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900/30 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+                   <h5 class="text-[11px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-key text-amber-500"></i> Password Generator</h5>
+                   <div class="flex gap-2"><input type="text" id="generated-password-input" readonly placeholder="Sandi..." onclick="copyGeneratedPassword()" class="flex-1 text-[10px] p-2 rounded-xl border dark:bg-slate-800 dark:text-white font-mono cursor-pointer outline-none" /><button onclick="generateSecurePassword()" class="bg-amber-500 text-white text-[10px] px-3 font-bold rounded-xl transition"><i class="fa-solid fa-rotate"></i></button></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- LOCK SCREEN OVERLAY (15 MENIT IDLE SECURITY) -->
+    <div id="idle-lock-screen" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center pointer-events-none opacity-0 transition-all duration-500">
+      <div class="text-center p-8 max-w-sm rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-6 transform scale-95 transition-transform duration-500" id="lock-card">
+        <div class="w-20 h-20 mx-auto rounded-full bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-500 animate-pulse text-3xl">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-white font-space font-black text-lg">Sesi Kerja Terkunci</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Portal dikunci sementara demi keamanan data karena sistem tidak mendeteksi aktivitas Anda selama beberapa waktu.</p>
+        </div>
+        <button onclick="unlockSession()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition duration-200 shadow-lg shadow-blue-500/20">
+          <i class="fa-solid fa-lock-open mr-1.5"></i> Buka Kunci Sesi
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL CONFIRMATION CUSTOM (REPLACES WINDOW.CONFIRM) -->
+    <div id="custom-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+      <div class="bg-white dark:bg-slate-800 w-full max-w-sm mx-4 p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300">
+        <div class="text-center space-y-4">
+          <div class="w-14 h-14 mx-auto rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center text-2xl">
+            <i id="confirm-modal-icon" class="fa-solid fa-circle-question"></i>
+          </div>
+          <div class="space-y-1">
+            <h4 id="confirm-modal-title" class="font-space font-extrabold text-slate-900 dark:text-white text-base">Konfirmasi Tindakan</h4>
+            <p id="confirm-modal-message" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
+          </div>
+          <div class="pt-4 flex items-center gap-2">
+            <button id="btn-confirm-cancel" class="flex-1 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition">Batal</button>
+            <button id="btn-confirm-ok" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition">Ya, Lanjutkan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="add-link-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+      <div class="bg-white dark:bg-slate-800 w-full max-w-md mx-4 p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300">
+        <h3 class="font-space font-bold text-slate-900 dark:text-white text-base mb-4"><i class="fa-solid fa-circle-plus text-emerald-500"></i> Tambah Tautan</h3>
+        <div class="space-y-4">
+          <input type="text" id="new-link-title" placeholder="Nama Tautan" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="url" id="new-link-url" placeholder="https://..." class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500" />
+          <textarea id="new-link-desc" rows="2" placeholder="Deskripsi Singkat" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <div class="grid grid-cols-2 gap-3">
+            <select id="new-link-category" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none font-bold focus:ring-2 focus:ring-blue-500">
+              <option value="utama">Dapodik Utama</option><option value="verval">Sistem Verval</option><option value="keuangan">Keuangan</option><option value="guru">Layanan GTK</option><option value="kepegawaian">ASN</option><option value="daerah">Portal Daerah</option>
+            </select>
+            <select id="new-link-icon" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none font-bold focus:ring-2 focus:ring-blue-500">
+              <option value="fa-globe">Globe</option><option value="fa-database">Database</option><option value="fa-id-card">Kartu</option><option value="fa-computer">Komputer</option><option value="fa-wallet">Dompet</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end gap-2.5">
+          <button onclick="closeAddLinkModal()" class="px-4 py-2 text-xs font-bold text-slate-500">Batal</button>
+          <button onclick="saveCustomLinkLocal()" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL TAMBAH AGENDA -->
+    <div id="add-agenda-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+      <div class="bg-white dark:bg-slate-800 w-full max-w-md mx-4 p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300">
+        <h3 class="font-space font-bold text-slate-900 dark:text-white text-base mb-4"><i class="fa-solid fa-list-check text-blue-500"></i> Buat Agenda Baru</h3>
+        <textarea id="agenda-input-text" rows="4" placeholder="Tuliskan tugas yang harus Bapak selesaikan..." class="w-full text-sm p-4 rounded-2xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+        <div class="mt-6 flex justify-end gap-2.5">
+          <button onclick="closeAddAgendaModal()" class="px-4 py-2 text-xs font-bold text-slate-500">Batal</button>
+          <button onclick="addAgendaItem()" class="px-6 py-2 rounded-xl bg-blue-600 text-white text-xs font-black">SIMPAN TUGAS</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL TAMBAH MEMO BARU (BUKU SAKU) -->
+    <div id="add-memo-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+      <div class="bg-white dark:bg-slate-800 w-full max-w-md mx-4 p-5 sm:p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300">
+        <div class="flex justify-between items-center pb-4 mb-4 border-b border-slate-100 dark:border-slate-700">
+          <h3 class="font-space font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+            <i class="fa-solid fa-sticky-note text-amber-500"></i> Tambah Memo Baru
+          </h3>
+          <button onclick="closeAddMemoModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Judul Catatan</label>
+              <input type="text" id="note-title-input" placeholder="Judul..." class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-1 focus:ring-blue-500 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Tanggal (Opsional)</label>
+              <input type="date" id="note-date-input" class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 font-mono focus:ring-1 focus:ring-blue-500 outline-none" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Isi Memo / Catatan</label>
+            <textarea id="note-body-input" rows="4" placeholder="Tulis catatan penting di sini..." class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-1 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+        </div>
+        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
+          <button onclick="closeAddMemoModal()" class="px-4 py-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700 text-xs font-bold text-slate-500">Batal</button>
+          <button onclick="addQuickNote()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-lg shadow-blue-500/10">Simpan Memo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL TEMPLATE WA -->
+    <div id="templates-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+      <div class="bg-white dark:bg-slate-800 w-full max-w-lg mx-4 p-5 sm:p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300 max-h-[90vh] overflow-y-auto font-sans">
+        <div class="flex justify-between items-center mb-4 border-b pb-4">
+          <h3 class="font-space font-bold text-slate-900 dark:text-white text-base flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-500 text-xl"></i> Template WA</h3>
+          <button onclick="closeTemplatesModal()" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div id="templates-list-view" class="space-y-4 font-sans">
+          <div id="templates-list-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1"></div>
+          <button onclick="showAddTemplateForm()" class="w-full py-2 bg-emerald-50 text-emerald-600 border border-emerald-200 text-xs font-bold rounded-xl">+ Tambah Template Kustom</button>
+        </div>
+        <div id="template-form-view" class="hidden space-y-4">
+          <input type="hidden" id="template-edit-id" />
+          <input type="text" id="template-name-input" placeholder="Judul Template" class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none" />
+          <textarea id="template-text-input" rows="5" placeholder="Pesan... gunakan {nama}" class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none"></textarea>
+          <div class="flex justify-end gap-2"><button onclick="hideTemplateForm()" class="px-4 py-2 text-xs font-bold text-slate-500">Batal</button><button onclick="saveTemplate()" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold">Simpan</button></div>
+        </div>
+        <div class="mt-6 flex justify-end"><button onclick="closeTemplatesModal()" class="px-5 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-xs font-bold">Tutup</button></div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div 
+      id="toast" 
+      class="fixed bottom-5 right-5 z-50 transform translate-y-4 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 bg-slate-900/95 dark:bg-white text-white dark:text-slate-900 text-xs py-3.5 px-5 rounded-xl shadow-xl border border-slate-800 dark:border-slate-100 font-sans"
+    >
+      <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600 text-base"></i>
+      <span id="toast-message" class="font-bold">Pesan notifikasi</span>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+      // ==========================================
+      // INTEGRASI UTAMA PWA REGISTRATION & GENERATOR (Orientasi diubah ke 'any')
+      // ==========================================
+      const manifestJsonText = `{
+  "name": "DAPO-HUB SPENTIG",
+  "short_name": "DAPO-HUB",
+  "description": "Portal Integrasi Operator Dapodik & IT UPT SPF SMP Negeri 3 Makassar",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2210/2210143.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2210/2210143.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}`;
+
+      const serviceWorkerJsText = `// Service Worker DAPO-HUB SPENTIG (Versi Teroptimasi & Tangguh Offline)
+// Menjamin aplikasi dapat berjalan 100% luring tanpa koneksi internet
+
+const CACHE_NAME = 'dapohub-spentig-cache-v3';
+const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
+  './manifest.json',
+  'https://cdn-icons-png.flaticon.com/512/2210/2210143.png',
+  'https://cdn.tailwindcss.com',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2',
+  'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js'
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => Promise.all(
+      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+    ))
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (event) => {
+  if (!event.request.url.startsWith('http')) return;
+
+  event.respondWith(
+    caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
+      if (cachedResponse) {
+        if (navigator.onLine) {
+          fetch(event.request).then((networkResponse) => {
+            if (networkResponse.status === 200) {
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+            }
+          }).catch(() => {});
+        }
+        return cachedResponse;
+      }
+      return fetch(event.request).catch(() => {
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html', { ignoreSearch: true });
+        }
+      });
+    })
+  );
+});`;
+
+      // Fungsi untuk mengunduh manifest / Service worker yang diberikan user
+      function downloadPwaFile(fileType) {
+        let content = "";
+        let filename = "";
+        let mimeType = "";
+        
+        if (fileType === 'manifest') {
+          content = manifestJsonText;
+          filename = "manifest.json";
+          mimeType = "application/json";
+        } else if (fileType === 'sw') {
+          content = serviceWorkerJsText;
+          filename = "sw.js";
+          mimeType = "application/javascript";
+        }
+
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast(`Berkas ${filename} berhasil diunduh! Silakan taruh di folder yang sama.`, "success");
+      }
+
+      // Registrasi Service Worker di Latar Belakang
+      function registerMainServiceWorker() {
+        const statusText = document.getElementById('pwa-sw-status-text');
+        const statusDot = document.getElementById('pwa-sw-status-dot');
+        
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('./sw.js')
+            .then((reg) => {
+              console.log('[PWA] Service Worker terdaftar dengan sukses:', reg.scope);
+              if (statusText) statusText.textContent = "Aktif (Terdaftar)";
+              if (statusDot) {
+                statusDot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500";
+              }
+            })
+            .catch((err) => {
+              console.warn('[PWA] Service Worker belum diletakkan di server lokal:', err);
+              if (statusText) statusText.textContent = "Siap Diinstal (Gunakan Kit)";
+              if (statusDot) {
+                statusDot.className = "w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse";
+              }
+            });
+        } else {
+          if (statusText) statusText.textContent = "Tidak Didukung Browser";
+          if (statusDot) statusDot.className = "w-1.5 h-1.5 rounded-full bg-rose-500";
+        }
+      }
+
+      // ==========================================
+      // TOAST NOTIFICATION SYSTEM
+      // ==========================================
+      let toastTimeoutId = null;
+      function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-message');
+        const toastIcon = document.getElementById('toast-icon');
+        if (!toast || !toastMsg) return;
+
+        toastMsg.textContent = message;
+
+        // Adaptasikan ikon dan warna berdasarkan tipe toast
+        if (toastIcon) {
+          toastIcon.className = "fa-solid text-base";
+          if (type === 'error') {
+            toastIcon.classList.add('fa-triangle-exclamation', 'text-rose-500');
+          } else if (type === 'warning') {
+            toastIcon.classList.add('fa-circle-exclamation', 'text-amber-500');
+          } else {
+            toastIcon.classList.add('fa-circle-check', 'text-emerald-400', 'dark:text-emerald-600');
+          }
+        }
+
+        toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        if (toastTimeoutId) clearTimeout(toastTimeoutId);
+        
+        toastTimeoutId = setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0');
+          toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        }, 4000);
+      }
+
+      // ==========================================
+      // DIALOG KONFIRMASI KUSTOM (ZERO NATIVE ALERTS)
+      // ==========================================
+      let activeConfirmCallback = null;
+      function showCustomConfirm(title, message, callback, iconClass = 'fa-circle-question') {
+        const modal = document.getElementById('custom-confirm-modal');
+        const titleEl = document.getElementById('confirm-modal-title');
+        const msgEl = document.getElementById('confirm-modal-message');
+        const iconEl = document.getElementById('confirm-modal-icon');
+
+        if (!modal || !titleEl || !msgEl) return;
+
+        titleEl.textContent = title;
+        msgEl.textContent = message;
+        if (iconEl) iconEl.className = `fa-solid ${iconClass}`;
+
+        activeConfirmCallback = callback;
+
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.children[0].classList.remove('scale-95');
+        modal.children[0].classList.add('scale-100');
+      }
+
+      function closeCustomConfirm(approved = false) {
+        const modal = document.getElementById('custom-confirm-modal');
+        if (!modal) return;
+
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.children[0].classList.remove('scale-100');
+        modal.children[0].classList.add('scale-95');
+
+        if (approved && typeof activeConfirmCallback === 'function') {
+          activeConfirmCallback();
+        }
+        activeConfirmCallback = null;
+      }
+
+      document.getElementById('btn-confirm-cancel').addEventListener('click', () => closeCustomConfirm(false));
+      document.getElementById('btn-confirm-ok').addEventListener('click', () => closeCustomConfirm(true));
+
+      // ==========================================
+      // INTEGRASI KEMANAN ENKRIPSI DATA (AES CRYPTO)
+      // ==========================================
+      const SECURE_PASS_KEY = "spentig-secure-dapohub-2026-key";
+
+      function secureSave(key, rawData) {
+        try {
+          const stringified = JSON.stringify(rawData);
+          if (typeof CryptoJS !== 'undefined') {
+            const encrypted = CryptoJS.AES.encrypt(stringified, SECURE_PASS_KEY).toString();
+            localStorage.setItem(key, encrypted);
+          } else {
+            localStorage.setItem(key, stringified);
+          }
+        } catch (error) {
+          console.error("Gagal melakukan enkripsi penyimpanan data local.", error);
+          localStorage.setItem(key, JSON.stringify(rawData));
+        }
+      }
+
+      function secureRead(key) {
+        try {
+          const rawValue = localStorage.getItem(key);
+          if (!rawValue) return null;
+
+          if (rawValue.startsWith('[') || rawValue.startsWith('{') || rawValue.startsWith('"')) {
+            return JSON.parse(rawValue);
+          }
+
+          if (typeof CryptoJS !== 'undefined') {
+            const decryptedBytes = CryptoJS.AES.decrypt(rawValue, SECURE_PASS_KEY);
+            const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            return JSON.parse(decryptedText);
+          } else {
+            return JSON.parse(rawValue);
+          }
+        } catch (error) {
+          console.error("Gagal mengurai sandi enkripsi data.", error);
+          try {
+            return JSON.parse(localStorage.getItem(key));
+          } catch(e) {
+            return null;
+          }
+        }
+      }
+
+      // ==========================================
+      // INTEGRASI STATUS ONLINE/OFFLINE REAL-TIME
+      // ==========================================
+      function updateOnlineStatus(isOnline) {
+        const statusBadge = document.getElementById('status-badge');
+        const statusBadgeIcon = document.getElementById('status-badge-icon');
+        const statusTextBadge = document.getElementById('status-text-badge');
+        const statusPulseDot = document.getElementById('status-pulse-dot');
+        const statusLabel = document.getElementById('status-label');
+
+        if (isOnline) {
+          if (statusBadge) {
+            statusBadge.className = "absolute -bottom-1 -right-1 block h-5 w-5 rounded-full ring-4 ring-white dark:ring-slate-800 bg-emerald-500 flex items-center justify-center text-[10px] text-white font-bold transition-colors duration-300";
+            statusBadge.setAttribute('title', 'Online (Internet Terhubung)');
+          }
+          if (statusBadgeIcon) statusBadgeIcon.className = "fa-solid fa-cloud-arrow-up animate-pulse";
+          
+          if (statusTextBadge) {
+            statusTextBadge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200/50 transition-colors duration-300";
+          }
+          if (statusPulseDot) statusPulseDot.className = "w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse";
+          if (statusLabel) statusLabel.textContent = "Online";
+        } else {
+          if (statusBadge) {
+            statusBadge.className = "absolute -bottom-1 -right-1 block h-5 w-5 rounded-full ring-4 ring-white dark:ring-slate-800 bg-amber-500 flex items-center justify-center text-[10px] text-white font-bold transition-colors duration-300";
+            statusBadge.setAttribute('title', 'Offline (Mode Luring Aktif)');
+          }
+          if (statusBadgeIcon) statusBadgeIcon.className = "fa-solid fa-hard-drive";
+          
+          if (statusTextBadge) {
+            statusTextBadge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-200/50 transition-colors duration-300";
+          }
+          if (statusPulseDot) statusPulseDot.className = "w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500 animate-ping";
+          if (statusLabel) statusLabel.textContent = "Offline (Lokal)";
+        }
+      }
+
+      window.addEventListener('offline', () => {
+        showToast('⚠️ Koneksi internet terputus! Portal berjalan dalam mode Offline (Lokal).', 'warning');
+        updateOnlineStatus(false);
+      });
+
+      window.addEventListener('online', () => {
+        showToast('⚡ Koneksi internet terhubung kembali! Portal kembali online.', 'success');
+        updateOnlineStatus(true);
+      });
+
+      // ==========================================
+      // INTEGRASI PENGUNCI IDLE 15 MENIT (ANTI-INTIP)
+      // ==========================================
+      let idleTimeCounter = 0;
+      let sessionLocked = false;
+      const IDLE_LIMIT = 15; // Limit dalam menit
+
+      function resetIdleTimer() {
+        if (!sessionLocked) {
+          idleTimeCounter = 0;
+        }
+      }
+
+      document.onmousemove = resetIdleTimer;
+      document.onkeypress = resetIdleTimer;
+      document.onclick = resetIdleTimer;
+      document.onscroll = resetIdleTimer;
+      document.ontouchstart = resetIdleTimer;
+
+      setInterval(() => {
+        if (sessionLocked) return;
+        idleTimeCounter++;
+        if (idleTimeCounter >= IDLE_LIMIT) {
+          lockUserSession();
+        }
+      }, 60000);
+
+      function lockUserSession() {
+        sessionLocked = true;
+        const lockScreen = document.getElementById('idle-lock-screen');
+        const lockCard = document.getElementById('lock-card');
+        if (lockScreen && lockCard) {
+          lockScreen.classList.remove('pointer-events-none', 'opacity-0');
+          lockScreen.classList.add('opacity-100', 'pointer-events-auto');
+          lockCard.classList.remove('scale-95');
+          lockCard.classList.add('scale-100');
+        }
+      }
+
+      function unlockSession() {
+        const lockScreen = document.getElementById('idle-lock-screen');
+        const lockCard = document.getElementById('lock-card');
+        if (lockScreen && lockCard) {
+          lockScreen.classList.add('pointer-events-none', 'opacity-0');
+          lockScreen.classList.remove('opacity-100', 'pointer-events-auto');
+          lockCard.classList.remove('scale-100');
+          lockCard.classList.add('scale-95');
+        }
+        sessionLocked = false;
+        idleTimeCounter = 0;
+        showToast("Sesi kerja dipulihkan! Selamat bertugas kembali.", "success");
+      }
+
+      // ==========================================
+      // GLOBAL STATE & DATA SEED 
+      // ==========================================
+      const defaultSeedLinks = [
+        { id: "seed-local-dapo", title: "Aplikasi Dapodik Lokal", url: "http://localhost:5774", desc: "Akses cepat langsung menuju sistem Aplikasi Dapodik yang terpasang di komputer ini (Port 5774).", category: "utama", icon: "fa-laptop", system: true },
+        { id: "seed-1", title: "Beranda Dapodik", url: "https://dapo.kemendikdasmen.go.id", desc: "Pusat rilis pembaruan installer, patch aplikasi, surat edaran resmi, dan panduan Dapodik.", category: "utama", icon: "fa-globe", system: true },
+        { id: "seed-2", title: "SP Datadik Satuan Pendidikan", url: "https://sp.datadik.kemendikdasmen.go.id/", desc: "Kelola data kelembagaan, registrasi akun PTK, verifikasi akun lembaga, dan unduh Prefill.", category: "utama", icon: "fa-school-flag", system: true },
+        { id: "seed-3", title: "PTK Datadik", url: "https://ptk.datadik.kemendikdasmen.go.id", desc: "Layanan autentikasi PTK mandiri untuk perbaikan riwayat pendidikan formal and riwayat kerja.", category: "utama", icon: "fa-id-card", system: true },
+        { id: "seed-4", title: "Unduh Prefill Dapodik", url: "https://prefill2.kemendikdasmen.go.id/", desc: "Unduh data prefill nasional untuk melakukan registrasi awal aplikasi Dapodik versi lokal.", category: "utama", icon: "fa-database", system: true },
+        { id: "seed-5", title: "Unduhan Aplikasi Dapodik", url: "https://dapo.kemendikdasmen.go.id/unduhan", desc: "Halaman resmi pusat unduhan Installer aplikasi, Patch, berkas panduan, dan formulir Dapodik.", category: "utama", icon: "fa-database", system: true },
+        { id: "seed-6", title: "E-Rapor SMP", url: "https://rapor.smpn3mks.sch.id", desc: "Akses portal manajemen aplikasi E-Rapor terintegrasi untuk SMP dari direktorat SMP.", category: "utama", icon: "fa-school-flag", system: true },
+        { id: "seed-7", title: "Rapor Pendidikan Kemendikdasmen", url: "https://raporpendidikan.kemendikdasmen.go.id", desc: "Platform evaluasi mutu sistem pendidikan Indonesia. Mengukur capaian kualitas mutu pembelajaran Spentig.", category: "utama", icon: "fa-globe", system: true },
+        { id: "seed-lomba", title: "Pendaftaran Lomba (BPTI/Puspresnas)", url: "https://daftar-bpti.kemendikdasmen.go.id", desc: "Portal pendaftaran resmi ajang talenta, kompetisi sains (OSN), seni (FLS2N), dan olahraga (O2SN) siswa.", category: "utama", icon: "fa-trophy", system: true },
+        { id: "seed-digi-ditsmp", title: "DIGI-DitSMP Kemendikdasmen", url: "https://digi-ditsmp.kemendikdasmen.go.id/", desc: "Portal digital pembelajaran digital SMP untuk efektivitas layanan dan pendampingan mutu.", category: "utama", icon: "fa-laptop", system: true },
+        { id: "seed-jdih", title: "JDIH Kemendikdasmen", url: "https://jdih.kemendikdasmen.go.id/", desc: "Jaringan Dokumentasi dan Informasi Hukum Kemendikdasmen untuk melacak hukum/surat edaran dinas.", category: "utama", icon: "fa-gavel", system: true },
+        { id: "seed-kurikulum", title: "Pusat Kurikulum Kemendikdasmen", url: "https://kurikulum.kemendikdasmen.go.id/", desc: "Layanan informasi regulasi Kurikulum Merdeka, panduan proyek profil Pancasila, dan kurikulum nasional.", category: "utama", icon: "fa-book-open", system: true },
+        
+        { id: "seed-8", title: "Cek NISN Mandiri", url: "https://nisn.data.kemendikdasmen.go.id", desc: "Pencarian mandiri Nomor Induk Siswa Nasional untuk validasi keaktifan identitas siswa Spentig.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-9", title: "Cek NUPTK GTK", url: "https://gtk.data.kemendikdasmen.go.id/", desc: "Pencarian publik status and nomor keaktifan NUPTK Pendidik dan Tenaga Kependidikan.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-ijazah", title: "Manajemen / Verval Ijazah (SIVIL)", url: "https://ijazah.data.kemendikdasmen.go.id/manajemen/#/sign-in", desc: "Sistem verifikasi ijazah elektronik Kemendikdasmen untuk memvalidasi kelulusan siswa dan status ijazah secara sah.", category: "verval", icon: "fa-graduation-cap", system: true },
+        { id: "seed-10", title: "Verval PTK", url: "https://vervalptk.data.kemendikdasmen.go.id/site/login", desc: "Verifikasi validitas NIK PTK, penerbitan NUPTK baru, and perbaikan identitas guru.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-11", title: "Verval PD (Peserta Didik)", url: "https://vervalpd.data.kemendikdasmen.go.id/", desc: "Penerbitan & perbaikan NISN, pengesahan NIK siswa terintegrasi langsung dengan database Dukcapil.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-12", title: "Verval SP (Satuan Pendidikan)", url: "https://vervalsp.data.kemendikdasmen.go.id/verval/index.php/cberanda/index/", desc: "Pengelolaan profil and spasial koordinat wilayah UPT SPF SMP Negeri 3 Makassar.", category: "verval", icon: "fa-globe", system: true },
+        { id: "seed-13", title: "Verval TIK", url: "https://vervaltio.data.kemendikdasmen.go.id", desc: "Verifikasi sarana komputer, proktor, jaringan internet, and daya tampung kesiapan ujian ANBK.", category: "verval", icon: "fa-computer", system: true },
+        { id: "seed-14", title: "Pusdatin PD (Pusat Data Peserta Didik)", url: "https://pd.data.kemendikdasmen.go.id", desc: "Akses sinkronisasi residu data kependudukan peserta didik, perbaikan tingkat ganda, dan kelulusan.", category: "verval", icon: "fa-id-card", system: true },
+        
+        { id: "seed-15", title: "Sipintar PIP (Program Indonesia Pintar)", url: "https://pip.kemendikdasmen.go.id/home_v1", desc: "Pemantauan penyaluran beasiswa PIP, pengajuan usulan baru, and unduh SK NOMINASI/pemberian.", category: "keuangan", icon: "fa-wallet", system: true },
+        { id: "seed-16", title: "ARKAS Kemendikdasmen", url: "https://arkas.kemendikdasmen.go.id", desc: "Aplikasi Rencana Kegiatan and Anggaran Sekolah untuk penyusunan dan pelaporan dana BOSP.", category: "keuangan", icon: "fa-wallet", system: true },
+        { id: "seed-17", title: "SIPLah", url: "https://siplah.blibli.com/", desc: "Sistem Informasi Pengadaan Sekolah untuk pembelanjaan barang and jasa dana BOSP.", category: "keuangan", icon: "fa-cart-shopping", system: true },
+        { id: "seed-18", title: "BOSP Salur", url: "https://bosp.kemendikdasmen.go.id", desc: "Pemantauan penyaluran dan konfirmasi laporan penggunaan dana BOSP Reguler & Kinerja.", category: "keuangan", icon: "fa-wallet", system: true },
+        { id: "seed-coretax", title: "Coretax DJP Pajak", url: "https://coretaxdjp.pajak.go.id/identityproviderportal/Account/Login", desc: "Portal terintegrasi sistem administrasi perpajakan masa depan DJP (Coretax System) bagi wajib pajak.", category: "keuangan", icon: "fa-receipt", system: true },
+        
+        { id: "seed-19", title: "Info GTK", url: "https://info.gtk.kemendikdasmen.go.id/", desc: "Pengecekan keaktifan mengajar mandiri, validitas data beban mengajar (JJM), dan keaktifan sertifikasi SKTP.", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-20", title: "SIMPKB Login", url: "https://paspor-gtk.simpkb.id/casgpo/login?service=https%3A%2F%2Fapp.simpkb.id%2Fauth%2Flogin", desc: "Sistem Informasi Manajemen Pengembangan Keprofesian Berkelanjutan (PPG, Diklat, & KKG/MGMP).", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-21", title: "Ruang GTK", url: "https://akun.pendidikan.go.id/login?flow=fa87d033-975e-48c1-8315-b75b0be1dfb2", desc: "Layanan bagi guru untuk pelatihan mandiri, pengisian e-Kinerja (SKP), and penyusunan modul ajar.", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-22", title: "Akun Belajar.id", url: "https://belajar.id", desc: "Aktivasi, reset kata sandi, dan sinkronisasi akun Google pembelajaran guru & siswa.", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-23", title: "Rumah Belajar", url: "https://rumah.pendidikan.go.id/", desc: "Portal media pembelajaran interaktif gratis yang menyajikan bahan belajar lengkap dari Kemendikbud.", category: "guru", icon: "fa-school-flag", system: true },
+        { id: "seed-kbbi", title: "KBBI Daring Kemendikdasmen", url: "https://kbbi.kemendikdasmen.go.id/", desc: "Kamus Besar Bahasa Indonesia (KBBI) elektronik resmi Pusat Pembinaan dan Pengembangan Bahasa.", category: "guru", icon: "fa-spell-check", system: true },
+        
+        { id: "seed-myasn", title: "MyASN BKN", url: "https://myasn.bkn.go.id", desc: "Portal utama satu pintu layanan kepegawaian mandiri ASN nasional dari Badan Kepegawaian Negara.", category: "kepegawaian", icon: "fa-id-card", system: true },
+        { id: "seed-ekinerja", title: "e-Kinerja BKN", url: "https://kinerja.bkn.go.id", desc: "Sistem pengelolaan kinerja pegawai ASN terintegrasi untuk penyusunan and penilaian Sasaran Kinerja Pegawai (SKP).", category: "kepegawaian", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-sipp", title: "SIPP Makassar (SIM Kepegawaian)", url: "https://sipp.makassar.go.id", desc: "Sistem Informasi Pelayanan Personil BKPSDMD Kota Makassar untuk pencatatan berkas fisik and administrasi ASN.", category: "kepegawaian", icon: "fa-city", system: true },
+        { id: "seed-esakti", title: "e-Sakti Makassar (Presensi & TPP)", url: "https://esakti.makassar.go.id", desc: "Layanan mandiri presensi ASN daerah Makassar, pemantauan kedisiplinan kerja, dan realisasi TPP harian.", category: "kepegayaian", icon: "fa-network-wired", system: true },
+        { id: "seed-simpeg", title: "SIMPEG Kemendikdasmen", url: "https://simpeg.bkpsdmd.makassarkota.go.id/", desc: "Sistem Informasi Manajemen Kepegawaian internal Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi.", category: "kepegawaian", icon: "fa-id-card", system: true },
+
+        { id: "seed-24", title: "Portal Web ANBK", url: "https://anbk.kemendikdasmen.go.id", desc: "Penetapan status pelaksanaan, data proktor, komputer client, penjadwalan, dan cetak kartu login.", category: "ujian", icon: "fa-computer", system: true },
+        { id: "seed-25", title: "Bio-AN SMP", url: "https://bioansmp.kemendikdasmen.go.id", desc: "Sistem penarikan data calon peserta Asesmen Nasional (DNT) dari pangkalan Dapodik secara terintegrasi.", category: "ujian", icon: "fa-id-card", system: true },
+        { id: "seed-26", title: "Portal TKA & Asesmen Bakat", url: "https://tka.kemendikdasmen.go.id/", desc: "Pusat Asesmen Pendidikan untuk pelaksanaan Tes Kemampuan Akademik (TKA) dan simulasi ujian siswa.", category: "ujian", icon: "fa-computer", system: true },
+        
+        { id: "seed-27", title: "Dinas Pendidikan Makassar", url: "https://disdik.makassarkota.go.id", desc: "Situs web utama Disdik Kota Makassar. Menyediakan informasi mutasi siswa, regulasi, dan kebijakan daerah.", category: "daerah", icon: "fa-city", system: true },
+        { id: "seed-28", title: "Portal PPDB Makassar", url: "https://spmb.makassarkota.go.id/cloginsekolahx", desc: "Penerimaan Peserta Didik Baru wilayah SMP Negeri Kota Makassar (Jalur Zonasi, Afirmasi, Prestasi).", category: "daerah", icon: "fa-city", system: true },
+        { id: "seed-29", title: "Uji Kecepatan Koneksi", url: "https://speedtest.net", desc: "Uji kehandalan latensi internet Lab Komputer Spentig sebelum melakukan sinkronisasi massal.", category: "daerah", icon: "fa-network-wired", system: true },
+        { id: "seed-mbg", title: "Makan Bergizi Gratis (MBG) Portal", url: "https://mbg.pdm.kemendikdasmen.go.id/portal", desc: "Portal integrasi dan pendataan nasional implementasi program Makan Bergizi Gratis di sekolah.", category: "daerah", icon: "fa-utensils", system: true }
+      ];
+
+      const dapodikEvents = [
+        { date: "2026-05-31", title: "Cut-Off Dapodik Semester Genap", color: "bg-orange-500", desc: "Batas waktu sinkronisasi data semester genap kelulusan siswa kelas 9." },
+        { date: "2026-06-15", title: "Pembukaan Pendaftaran SPMB SMP", color: "bg-indigo-500", desc: "Verifikasi dan pendaftaran murid baru jalur domisili, afirmasi, dan prestasi." },
+        { date: "2026-07-31", title: "Target Sinkron Awal Semester Ganjil", color: "bg-teal-500", desc: "Batas pemutakhiran data rombel baru kelas 7, 8, dan 9." },
+        { date: "2026-08-31", title: "Batas Cut-Off BOS Reguler", color: "bg-rose-500", desc: "Penarikan basis data penerima dana BOSP Reguler tahap II secara nasional." },
+        { date: "2026-09-22", title: "Asesmen Nasional (ANBK) SMP", color: "bg-rose-500", desc: "Pelaksanaan simulasi and gladi bersih ANBK Lab Komputer." },
+        { date: "2026-12-31", title: "Cut-Off Dapodik Akhir Semester Ganjil", color: "bg-amber-500", desc: "Evaluasi akhir penginputan nilai rapor ganjil siswa." }
+      ];
+
+      const defaultWaTemplates = [
+        { id: "rapor", name: "1. Pengumpulan Nilai E-Rapor", text: "Yth. {nama},\n\nMohon bantuannya untuk segera menginput dan menyinkronkan Nilai Rapor Kelas Anda ke aplikasi E-Rapor UPT SPF SMPN 3 Makassar sebelum batas waktu pengumpulan.\n\nTerima kasih atas dedikasi dan kerja samanya.\n\nSalam,\nOperator Dapodik" },
+        { id: "data", name: "2. Perbaikan Berkas & NIK Dapodik", text: "Yth. {nama},\n\nMohon kesediaannya untuk memeriksa kembali dan memverifikasi kelengkapan berkas kependudukan, kesesuaian NIK, serta Riwayat Kepangkatan Anda di portal Dapodik sekolah.\n\nHarap hubungi operator jika terdapat kekeliruan.\n\nTerima kasih,\nOperator Dapodik" },
+        { id: "belajar", name: "3. Aktivasi Akun Belajar.id", text: "Yth. {nama},\n\nHarap segera melakukan aktivasi akun pembelajaran Belajar.id Anda demi kelancaran akses rapor pendidikan, platform Merdeka Mengajar, and administrasi dinas lainnya.\n\nJika menemui kendala reset password, harap hubungi Operator sekolah.\n\nTerima kasih,\nOperator Dapodik" }
+      ];
+
+      let activeCategory = 'semua';
+      let linksData = [];
+      let agendaData = [];
+      let notesData = [];
+      let waTemplates = [];
+      let authenticatorKeys = [];
+      let currentDateObj = new Date();
+      let qrScannerObj = null;
+      let isScanning = false;
+      let totpIntervalId = null;
+
+      // ==========================================
+      // REAL-TIME DIGITAL CLOCK WITA
+      // ==========================================
+      function updateClock() {
+        const timeDisplay = document.getElementById('header-time');
+        const dateDisplay = document.getElementById('header-date');
+        if (!timeDisplay || !dateDisplay) return;
+
+        const now = new Date();
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const witaOffset = 8; 
+        const witaDate = new Date(utc + (3600000 * witaOffset));
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        
+        timeDisplay.textContent = `${String(witaDate.getHours()).padStart(2, '0')}:${String(witaDate.getMinutes()).padStart(2, '0')}:${String(witaDate.getSeconds()).padStart(2, '0')} WITA`;
+        dateDisplay.textContent = `${days[witaDate.getDay()]}, ${witaDate.getDate()} ${months[witaDate.getMonth()]} ${witaDate.getFullYear()}`;
+      }
+      setInterval(updateClock, 1000);
+
+      // ==========================================
+      // REKONSILIASI DATABASE SINKRON LOKAL (ENKRIPSI)
+      // ==========================================
+      function initData() {
+        updateOnlineStatus(navigator.onLine);
+
+        const localLinks = secureRead('spentig-links');
+        if (localLinks) {
+          linksData = localLinks;
+          let hasNewSeeds = false;
+          defaultSeedLinks.forEach(seed => {
+            if (!linksData.some(link => link.id === seed.id || (link.title === seed.title && link.system))) {
+              linksData.push(seed);
+              hasNewSeeds = true;
+            }
+          });
+          if (hasNewSeeds) {
+            saveLinks();
+          }
+        } else {
+          linksData = [...defaultSeedLinks];
+          saveLinks();
+        }
+
+        const localAgendas = secureRead('spentig-agendas');
+        if (localAgendas) {
+          agendaData = localAgendas;
+        } else {
+          agendaData = [
+            { id: "ag-1", text: "Koordinasi pemutakhiran data rombel kelas 7, 8, dan 9.", done: false, createdAt: Date.now() },
+            { id: "ag-2", text: "Verifikasi validitas residu NIK siswa pada portal VervalPD.", done: false, createdAt: Date.now() + 1 },
+            { id: "ag-3", text: "Konfirmasi sinkronisasi Dapodik akhir pekan.", done: true, createdAt: Date.now() + 2 }
+          ];
+          saveAgenda();
+        }
+
+        const localNotes = secureRead('spentig-notes');
+        if (localNotes) {
+          notesData = localNotes;
+        } else {
+          notesData = [
+            { id: "n-1", title: "Info Penting", body: "Batas cut-off Dapodik reguler semester ganjil jatuh pada tanggal 31 Agustus.", eventDate: "2026-08-31", createdAt: Date.now() }
+          ];
+          saveNotes();
+        }
+
+        initWaTemplates();
+        initAuthenticatorKeys();
+
+        renderAll();
+        initCalendar();
+        startCutOffCountdown();
+        startTotpEngine();
+        updateClock(); 
+        
+        registerMainServiceWorker();
+      }
+
+      function saveLinks() { secureSave('spentig-links', linksData); }
+      function saveAgenda() { secureSave('spentig-agendas', agendaData); }
+      function saveNotes() { secureSave('spentig-notes', notesData); }
+
+      // ==========================================
+      // LINK KUSTOM
+      // ==========================================
+      function saveCustomLinkLocal() {
+        const title = document.getElementById('new-link-title').value.trim();
+        const url = document.getElementById('new-link-url').value.trim();
+        const desc = document.getElementById('new-link-desc').value.trim();
+        const category = document.getElementById('new-link-category').value;
+        const icon = document.getElementById('new-link-icon').value;
+
+        if (!title || !url || !desc) {
+          showToast("Mohon lengkapi seluruh isian formulir.", "warning");
+          return;
+        }
+
+        const newLink = {
+          id: `link-${Date.now()}`,
+          title,
+          url,
+          desc,
+          category,
+          icon,
+          system: false,
+          createdAt: Date.now()
+        };
+
+        linksData.push(newLink);
+        saveLinks();
+        renderDynamicLinks();
+        closeAddLinkModal();
+
+        document.getElementById('new-link-title').value = '';
+        document.getElementById('new-link-url').value = '';
+        document.getElementById('new-link-desc').value = '';
+        showToast("Tautan kustom berhasil diamankan dan disimpan!");
+      }
+
+      function deleteCustomLink(id) {
+        showCustomConfirm(
+          "Hapus Tautan?",
+          "Apakah Anda yakin ingin menghapus tautan kustom ini?",
+          () => {
+            linksData = linksData.filter(l => l.id !== id);
+            saveLinks();
+            renderDynamicLinks();
+            showToast("Tautan kustom berhasil dihapus.");
+          },
+          "fa-trash-can"
+        );
+      }
+
+      function resetToDefaultLinks() {
+        showCustomConfirm(
+          "Atur Ulang Tautan?",
+          "Apakah Anda yakin ingin mengatur ulang daftar tautan ke pengaturan default? Tautan kustom yang Anda buat sendiri akan dipertahankan.",
+          () => {
+            const customUserLinks = linksData.filter(link => !link.system);
+            linksData = [...defaultSeedLinks, ...customUserLinks];
+            saveLinks();
+            renderDynamicLinks();
+            showToast("Daftar tautan default berhasil diatur ulang!");
+          },
+          "fa-arrows-rotate"
+        );
+      }
+
+      // ==========================================
+      // RENDER LAYOUT & DYNAMIC LINKS
+      // ==========================================
+      function renderAll() {
+        renderDynamicLinks();
+        renderAgenda();
+        renderQuickNotes();
+      }
+
+      function renderDynamicLinks() {
+        const wrapper = document.getElementById('dynamic-links-wrapper');
+        if (!wrapper) return;
+        wrapper.innerHTML = '';
+
+        const categoriesMap = {
+          'utama': { title: 'Portal Utama & Akun Dapodik', icon: 'fa-folder-open', color: 'text-blue-500' },
+          'verval': { title: 'Portal Verifikasi & Validasi (Verval)', icon: 'fa-shield-halved', color: 'text-emerald-500' },
+          'keuangan': { title: 'BOS, Bansos & Keuangan Sekolah', icon: 'fa-wallet', color: 'text-amber-500' },
+          'guru': { title: 'Layanan Pendidik & Tenaga Kependidikan (PTK)', icon: 'fa-chalkboard-user', color: 'text-indigo-500' },
+          'kepegawaian': { title: 'Layanan Kepegawaian & ASN Daerah/Pusat', icon: 'fa-id-card-clip', color: 'text-sky-500' },
+          'ujian': { title: 'Asesmen & Evaluasi Pendidikan (ANBK/TKA)', icon: 'fa-laptop-code', color: 'text-rose-500' },
+          'daerah': { title: 'Portal Dinas Pendidikan & Daerah', icon: 'fa-city', color: 'text-purple-500' }
+        };
+
+        const queryValue = document.getElementById('search-input').value.toLowerCase().trim();
+        
+        let totalCount = 0;
+        let countsMap = { semua: 0, utama: 0, verval: 0, keuangan: 0, guru: 0, kepegawaian: 0, "2fa_auth": 0, ujian: 0, daerah: 0 };
+
+        linksData.forEach(link => {
+          const matchQuery = link.title.toLowerCase().includes(queryValue) || link.desc.toLowerCase().includes(queryValue);
+          if (matchQuery) {
+            countsMap[link.category] = (countsMap[link.category] || 0) + 1;
+            totalCount++;
+          }
+        });
+        countsMap['semua'] = totalCount;
+        countsMap['2fa_auth'] = authenticatorKeys.length;
+
+        Object.keys(countsMap).forEach(key => {
+          const badgeEl = document.getElementById(`badge-${key}`);
+          if (badgeEl) {
+            badgeEl.textContent = countsMap[key];
+          }
+        });
+
+        let totalVisible = 0;
+
+        Object.keys(categoriesMap).forEach(catKey => {
+          const filtered = linksData.filter(link => {
+            const matchCat = (activeCategory === 'semua' || activeCategory === catKey);
+            const matchQuery = link.title.toLowerCase().includes(queryValue) || link.desc.toLowerCase().includes(queryValue);
+            return link.category === catKey && matchCat && matchQuery;
+          });
+
+          if (filtered.length > 0) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'link-section';
+            sectionDiv.innerHTML = `
+              <h3 class="text-xs font-black tracking-wider uppercase text-slate-400 dark:text-slate-500 mb-4 flex items-center gap-2">
+                <i class="fa-solid ${categoriesMap[catKey].icon} ${categoriesMap[catKey].color}"></i> ${categoriesMap[catKey].title}
+              </h3>
+            `;
+
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'grid grid-cols-1 sm:grid-cols-2 gap-4';
+
+            filtered.forEach(link => {
+              totalVisible++;
+              const card = document.createElement('a');
+              card.href = link.url;
+              card.target = "_blank";
+              card.rel = "noopener";
+              card.className = 'link-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-lg transition-all duration-200 group relative';
+              
+              const deleteButtonHtml = !link.system 
+                ? `<button onclick="event.preventDefault(); event.stopPropagation(); deleteCustomLink('${link.id}')" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors z-20 p-1" title="Hapus Link Kustom">
+                     <i class="fa-solid fa-trash text-xs"></i>
+                   </button>` 
+                : '';
+
+              card.innerHTML = `
+                ${deleteButtonHtml}
+                <div class="flex items-start gap-3 sm:gap-4">
+                  <div class="p-2.5 sm:p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform flex-shrink-0">
+                    <i class="fa-solid ${link.icon || 'fa-globe'} text-lg sm:text-xl"></i>
+                  </div>
+                  <div class="flex-1 pr-4 min-w-0">
+                    <h4 class="font-extrabold text-slate-900 dark:text-white text-xs sm:text-sm md:text-base group-hover:text-blue-600 dark:group-hover:text-blue-400 flex items-center gap-1 truncate font-space">
+                      ${link.title} <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    </h4>
+                    <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 sm:mt-1.5 leading-relaxed break-words">${link.desc}</p>
+                  </div>
+                </div>
+              `;
+              gridDiv.appendChild(card);
+            });
+
+            sectionDiv.appendChild(gridDiv);
+            wrapper.appendChild(sectionDiv);
+          }
+        });
+
+        const noResults = document.getElementById('no-results-message');
+        if (noResults) {
+          if (totalVisible === 0) {
+            noResults.classList.remove('hidden');
+          } else {
+            noResults.classList.add('hidden');
+          }
+        }
+      }
+
+      function selectCategory(categoryName) {
+        activeCategory = categoryName;
+        const tabs = document.querySelectorAll('.category-tab');
+        
+        const panel2Fa = document.getElementById('panel-2fa-main-auth');
+        const panelLinks = document.getElementById('panel-links-main-wrapper');
+
+        if (categoryName === '2fa_auth') {
+          if (panel2Fa) panel2Fa.classList.remove('hidden');
+          if (panelLinks) panelLinks.classList.add('hidden');
+        } else {
+          if (panel2Fa) panel2Fa.classList.add('hidden');
+          if (panelLinks) panelLinks.classList.remove('hidden');
+        }
+
+        tabs.forEach(tab => {
+          const tabCategory = tab.getAttribute('data-category');
+          const badge = tab.querySelector('span:last-child');
+          if (tabCategory === categoryName) {
+            tab.className = 'category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-4 py-2.5 text-xs font-bold rounded-xl transition-all duration-200 bg-blue-600 text-white shadow-md shadow-blue-500/20';
+            if (badge) {
+              badge.className = 'ml-1.5 bg-white/20 text-white px-1.5 py-0.5 rounded text-[10px] font-mono';
+            }
+          } else {
+            tab.className = 'category-tab inline-flex lg:flex items-center justify-between w-auto lg:w-full px-4 py-2.5 text-xs font-bold rounded-xl transition-all duration-200 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
+            if (badge) {
+              badge.className = 'ml-1.5 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded text-[10px] font-mono';
+            }
+          }
+        });
+        
+        filterLinksOrKeys();
+      }
+
+      // ==========================================
+      // INTEGRASI PENCARIAN TAUTAN & KUNCI
+      // ==========================================
+      function filterLinksOrKeys() {
+        const searchInput = document.getElementById('search-input');
+        const clearBtn = document.getElementById('clear-search');
+        
+        if (searchInput && clearBtn) {
+          if (searchInput.value.trim().length > 0) {
+            clearBtn.classList.remove('hidden');
+          } else {
+            clearBtn.classList.add('hidden');
+          }
+        }
+
+        if (activeCategory === '2fa_auth') {
+          renderAuthenticatorKeys();
+        } else {
+          renderDynamicLinks();
+        }
+      }
+
+      // ==========================================
+      // AGENDA WORKLIST & PROGRESS BAR
+      // ==========================================
+      function renderAgenda() {
+        const container = document.getElementById('agenda-list-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const filterValue = document.getElementById('agenda-filter').value;
+        
+        let filteredAgenda = agendaData;
+        if (filterValue === 'belum') {
+          filteredAgenda = agendaData.filter(task => !task.done);
+        } else if (filterValue === 'selesai') {
+          filteredAgenda = agendaData.filter(task => task.done);
+        }
+
+        if (filteredAgenda.length === 0) {
+          container.innerHTML = `<p class="text-xs text-slate-400 dark:text-slate-500 italic text-center py-4">Tidak ada agenda kerja dalam kategori ini.</p>`;
+          updateActiveTaskInCountdown();
+          return;
+        }
+
+        const sortedAgenda = [...filteredAgenda].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+        sortedAgenda.forEach(task => {
+          const taskDiv = document.createElement('div');
+          taskDiv.className = 'flex items-start justify-between gap-2.5 p-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 transition group';
+          taskDiv.innerHTML = `
+            <label class="flex items-start gap-3 cursor-pointer flex-1 min-w-0">
+              <input 
+                type="checkbox" 
+                class="mt-1 h-4 w-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300" 
+                ${task.done ? 'checked' : ''} 
+                onchange="toggleTaskDone('${task.id}')"
+              />
+              <span class="text-xs text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition break-words ${task.done ? 'line-through opacity-50' : ''}">
+                ${task.text}
+              </span>
+            </label>
+            <button onclick="deleteAgendaItem('${task.id}')" class="text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition duration-150 px-1.5 flex-shrink-0" title="Hapus Tugas">
+              <i class="fa-solid fa-trash-can text-[10px]"></i>
+            </button>
+          `;
+          container.appendChild(taskDiv);
+        });
+
+        updateActiveTaskInCountdown();
+      }
+
+      function addAgendaItem() {
+        const input = document.getElementById('agenda-input-text');
+        if (!input) return;
+        const text = input.value.trim();
+
+        if (!text) {
+          showToast("Isi nama tugas terlebih dahulu.", "warning");
+          return;
+        }
+
+        const newAgenda = {
+          id: `ag-${Date.now()}`,
+          text,
+          done: false,
+          createdAt: Date.now()
+        };
+
+        agendaData.push(newAgenda);
+        saveAgenda();
+        renderAgenda();
+        input.value = '';
+        closeAddAgendaModal();
+        showToast("Agenda kerja baru ditambahkan!");
+      }
+
+      function toggleTaskDone(id) {
+        agendaData = agendaData.map(task => {
+          if (task.id === id) {
+            const nextDone = !task.done;
+            if (nextDone) showToast("Tugas diselesaikan, hebat!", "success");
+            return { ...task, done: nextDone };
+          }
+          return task;
+        });
+        saveAgenda();
+        renderAgenda();
+      }
+
+      // INTEGRASI NOTIFIKASI TUGAS AKTIF PADA HARI CUT-OFF
+      function updateActiveTaskInCountdown() {
+        const taskTextEl = document.getElementById('countdown-active-task-text');
+        const taskBtnEl = document.getElementById('countdown-active-task-btn');
+        if (!taskTextEl || !taskBtnEl) return;
+
+        const incompleteTasks = agendaData.filter(t => !t.done);
+        if (incompleteTasks.length > 0) {
+          const activeTask = incompleteTasks[0];
+          taskTextEl.textContent = activeTask.text;
+          taskTextEl.classList.remove('italic', 'text-slate-400');
+          taskBtnEl.classList.remove('hidden');
+          taskBtnEl.onclick = () => {
+            toggleTaskDone(activeTask.id);
+            showToast("Fokus utama sinkronisasi berhasil diselesaikan!");
+          };
+        } else {
+          taskTextEl.textContent = "✅ Semua tugas sinkronisasi selesai! Spentig siap luring aman.";
+          taskTextEl.classList.add('italic', 'text-slate-400');
+          taskBtnEl.classList.add('hidden');
+        }
+      }
+
+      function deleteAgendaItem(id) {
+        showCustomConfirm(
+          "Hapus Tugas Agenda?",
+          "Apakah Anda yakin ingin menghapus tugas ini dari agenda Anda?",
+          () => {
+            agendaData = agendaData.filter(task => task.id !== id);
+            saveAgenda();
+            renderAgenda();
+            showToast("Agenda berhasil dihapus.");
+          },
+          "fa-trash-can"
+        );
+      }
+
+      // ==========================================
+      // WHATSAPP TEMPLATES DATABASE & CRUD
+      // ==========================================
+      function initWaTemplates() {
+        const localTemplates = secureRead('spentig-wa-templates');
+        if (localTemplates) {
+          waTemplates = localTemplates;
+        } else {
+          waTemplates = [...defaultWaTemplates];
+          saveWaTemplates();
+        }
+        populateWaSelect();
+      }
+
+      function saveWaTemplates() {
+        secureSave('spentig-wa-templates', waTemplates);
+      }
+
+      function populateWaSelect() {
+        const select = document.getElementById('wa-template-select');
+        if (!select) return;
+        select.innerHTML = '';
+        waTemplates.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.id;
+          opt.textContent = t.name;
+          select.appendChild(opt);
+        });
+      }
+
+      function openTemplatesModal() {
+        const modal = document.getElementById('templates-modal');
+        if (!modal) return;
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.children[0].classList.remove('scale-95');
+        modal.children[0].classList.add('scale-100');
+        renderTemplatesList();
+        hideTemplateForm();
+      }
+
+      function closeTemplatesModal() {
+        const modal = document.getElementById('templates-modal');
+        if (!modal) return;
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.children[0].classList.remove('scale-100');
+        modal.children[0].classList.add('scale-95');
+      }
+
+      function renderTemplatesList() {
+        const container = document.getElementById('templates-list-container');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        waTemplates.forEach(t => {
+          const div = document.createElement('div');
+          div.className = 'flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-2xl';
+          
+          const isDefault = defaultWaTemplates.some(def => def.id === t.id);
+          const actionBtns = `
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <button onclick="editTemplate('${t.id}')" class="w-8 h-8 flex items-center justify-center text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg text-xs" title="Edit">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              ${!isDefault ? `
+              <button onclick="deleteTemplate('${t.id}')" class="w-8 h-8 flex items-center justify-center text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-lg text-xs" title="Hapus">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              ` : ''}
+            </div>
+          `;
+
+          div.innerHTML = `
+            <div class="min-w-0 flex-1 pr-3">
+              <p class="text-xs font-black text-slate-800 dark:text-slate-200 truncate">${t.name}</p>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500 truncate mt-0.5">${t.text.replace(/\n/g, ' ')}</p>
+            </div>
+            ${actionBtns}
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      function showAddTemplateForm() {
+        document.getElementById('templates-list-view').classList.add('hidden');
+        document.getElementById('template-form-view').classList.remove('hidden');
+        document.getElementById('template-edit-id').value = "";
+        document.getElementById('template-name-input').value = "";
+        document.getElementById('template-text-input').value = "";
+      }
+
+      function hideTemplateForm() {
+        document.getElementById('templates-list-view').classList.remove('hidden');
+        document.getElementById('template-form-view').classList.add('hidden');
+      }
+
+      function editTemplate(id) {
+        const template = waTemplates.find(t => t.id === id);
+        if (!template) return;
+        
+        document.getElementById('templates-list-view').classList.add('hidden');
+        document.getElementById('template-form-view').classList.remove('hidden');
+        document.getElementById('template-edit-id').value = template.id;
+        document.getElementById('template-name-input').value = template.name;
+        document.getElementById('template-text-input').value = template.text;
+      }
+
+      function saveTemplate() {
+        const id = document.getElementById('template-edit-id').value;
+        const name = document.getElementById('template-name-input').value.trim();
+        const text = document.getElementById('template-text-input').value.trim();
+
+        if (!name || !text) {
+          showToast("Nama dan isi template wajib diisi!", "warning");
+          return;
+        }
+
+        if (id) {
+          waTemplates = waTemplates.map(t => t.id === id ? { ...t, name, text } : t);
+          showToast("Template berhasil diperbarui!");
+        } else {
+          const newId = 'custom-' + Date.now();
+          waTemplates.push({ id: newId, name, text });
+          showToast("Template baru berhasil ditambahkan!");
+        }
+
+        saveWaTemplates();
+        populateWaSelect();
+        renderTemplatesList();
+        hideTemplateForm();
+      }
+
+      function deleteTemplate(id) {
+        showCustomConfirm(
+          "Hapus Template WA?",
+          "Apakah Anda yakin ingin menghapus template broadcast WhatsApp ini secara permanen?",
+          () => {
+            waTemplates = waTemplates.filter(t => t.id !== id);
+            saveWaTemplates();
+            populateWaSelect();
+            renderTemplatesList();
+            showToast("Template berhasil dihapus!");
+          },
+          "fa-trash-can"
+        );
+      }
+
+      function getBroadcastText() {
+        const nameInput = document.getElementById('wa-recipient-name');
+        const templateSelect = document.getElementById('wa-template-select');
+        if (!nameInput || !templateSelect) return "";
+
+        const name = nameInput.value.trim() || "Bapak/Ibu Guru";
+        const selectedId = templateSelect.value;
+        const template = waTemplates.find(t => t.id === selectedId);
+        
+        if (!template) return "";
+        return template.text.replace(/{nama}/g, name);
+      }
+
+      function copyBroadcastMessage() {
+        const text = getBroadcastText();
+        if (!text) {
+          showToast("Gagal menghasilkan pesan broadcast.", "error");
+          return;
+        }
+        copyText(text, "Pesan siaran WhatsApp berhasil disalin!");
+      }
+
+      function sendBroadcastWhatsApp() {
+        const text = getBroadcastText();
+        if (!text) {
+          showToast("Gagal menghasilkan pesan broadcast.", "error");
+          return;
+        }
+        const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+      }
+
+      // ==========================================
+      // GOOGLE AUTHENTICATOR / 2FA TOTP ENGINE (ENCRYPTED)
+      // ==========================================
+      function initAuthenticatorKeys() {
+        const localKeys = secureRead('spentig-auth-keys');
+        if (localKeys) {
+          authenticatorKeys = localKeys;
+        } else {
+          authenticatorKeys = [
+            { id: "auth-1", label: "MyASN BKN", user: "rahmathirahim", key: "JBSWY3DPEHPK3PXP", visible: false }
+          ];
+          saveAuthenticatorKeys();
+        }
+        renderAuthenticatorKeys();
+      }
+
+      function saveAuthenticatorKeys() {
+        secureSave('spentig-auth-keys', authenticatorKeys);
+        const badge2Fa = document.getElementById('badge-2fa_auth');
+        if (badge2Fa) badge2Fa.textContent = authenticatorKeys.length;
+      }
+
+      function base32toWordArray(base32) {
+        const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        let bits = "";
+        for (let i = 0; i < base32.length; i++) {
+          const val = base32chars.indexOf(base32.charAt(i));
+          if (val === -1) continue;
+          bits += val.toString(2).padStart(5, '0');
+        }
+        const words = [];
+        for (let i = 0; i < bits.length; i += 32) {
+          const chunk = bits.substr(i, 32).padEnd(32, '0');
+          words.push(parseInt(chunk, 2) | 0);
+        }
+        const byteCount = Math.floor(bits.length / 8);
+        return CryptoJS.lib.WordArray.create(words, byteCount);
+      }
+
+      function generateTOTP(secret) {
+        try {
+          const cleanSecret = secret.replace(/\s+/g, "").toUpperCase();
+          const key = base32toWordArray(cleanSecret);
+          if (!key || key.sigBytes === 0) return "000000";
+
+          const epoch = Math.floor(Date.now() / 30000);
+          const timeHex = epoch.toString(16).padStart(16, '0');
+          const time = CryptoJS.enc.Hex.parse(timeHex);
+
+          const hmac = CryptoJS.HmacSHA1(time, key);
+          const hmacHex = CryptoJS.enc.Hex.stringify(hmac);
+
+          const offset = parseInt(hmacHex.substring(hmacHex.length - 1), 16);
+          const part = hmacHex.substring(offset * 2, offset * 2 + 8);
+          const binary = parseInt(part, 16) & 0x7fffffff;
+          const otp = binary % 1000000;
+
+          return String(otp).padStart(6, '0');
+        } catch (e) {
+          console.error("Gagal melakukan kalkulasi OTP:", e);
+          return "000000";
+        }
+      }
+
+      function startTotpEngine() {
+        if (totpIntervalId) clearInterval(totpIntervalId);
+        function updateTotpTimer() {
+          const epoch = Math.round(new Date().getTime() / 1000.0);
+          const remainingSeconds = 30 - (epoch % 30);
+          
+          const timerText = document.getElementById('otp-timer-text');
+          const progressBar = document.getElementById('otp-progress-bar');
+          
+          if (timerText) timerText.textContent = remainingSeconds;
+          if (progressBar) {
+            const pct = (remainingSeconds / 30) * 100;
+            progressBar.style.width = `${pct}%`;
+            progressBar.className = remainingSeconds < 5 ? "h-full bg-rose-500 rounded-full transition-all" : "h-full bg-blue-600 rounded-full transition-all";
+          }
+          if (remainingSeconds === 30 || remainingSeconds === 29) {
+            renderAuthenticatorKeys();
+          }
+        }
+        updateTotpTimer();
+        totpIntervalId = setInterval(updateTotpTimer, 1000);
+      }
+
+      function renderAuthenticatorKeys() {
+        const container = document.getElementById('main-authenticator-list');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+        const filteredKeys = authenticatorKeys.filter(k => {
+          return k.label.toLowerCase().includes(searchQuery) || k.user.toLowerCase().includes(searchQuery);
+        });
+
+        if (filteredKeys.length === 0) {
+          container.innerHTML = `
+            <div class="col-span-1 sm:col-span-2 p-8 text-center bg-slate-50 dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
+              <i class="fa-solid fa-shield-halved text-slate-300 dark:text-slate-700 text-3xl mb-2"></i>
+              <p class="text-xs text-slate-400 dark:text-slate-500 italic">Akun Authenticator tidak ditemukan. Tambah kunci baru di bawah.</p>
+            </div>
+          `;
+          return;
+        }
+
+        filteredKeys.forEach(k => {
+          const div = document.createElement('div');
+          div.className = 'p-5 bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 rounded-2xl relative group transition hover:shadow-md';
+          const displayKey = k.visible ? k.key : '•••• •••• •••• ••••';
+          const eyeIcon = k.visible ? 'fa-eye-slash' : 'fa-eye';
+          const currentToken = generateTOTP(k.key);
+          const firstThree = currentToken.substring(0, 3);
+          const lastThree = currentToken.substring(3, 6);
+
+          div.innerHTML = `
+            <div class="space-y-3 font-sans">
+              <div class="flex justify-between items-start">
+                <div class="min-w-0 flex-1">
+                  <h4 class="text-xs font-black text-slate-900 dark:text-white truncate font-space">${k.label}</h4>
+                  <p class="text-[10px] text-slate-400 dark:text-slate-500 truncate">${k.user}</p>
+                </div>
+                <button onclick="delete2FaKey('${k.id}')" class="text-slate-300 hover:text-rose-500 transition px-1 flex-shrink-0" title="Hapus Kunci">
+                  <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
+              </div>
+              <div onclick="copyText('${currentToken}', 'Token OTP disalin!')" class="bg-white dark:bg-slate-800 py-3 px-4 rounded-xl border border-slate-100 dark:border-slate-700 text-center cursor-copy group/otp hover:border-blue-500 transition duration-150" title="Klik untuk menyalin">
+                <span class="font-space font-black text-2xl tracking-widest text-blue-600 dark:text-blue-400 inline-block">${firstThree} ${lastThree}</span>
+                <span class="block text-[8px] uppercase tracking-wider font-extrabold text-slate-400 mt-1"><i class="fa-regular fa-copy"></i> Klik untuk salin</span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-200/40">
+                <span class="font-mono truncate select-all pr-2">${displayKey}</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  <button onclick="toggle2FaVisibility('${k.id}')" class="text-slate-400 hover:text-slate-600 p-0.5"><i class="fa-solid ${eyeIcon}"></i></button>
+                  <button onclick="copyText('${k.key}', 'Secret Key disalin!')" class="text-slate-400 hover:text-blue-500 p-0.5"><i class="fa-solid fa-copy"></i></button>
+                </div>
+              </div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      function save2FaKeyFromMain() {
+        const labelInput = document.getElementById('auth-main-label');
+        const userInput = document.getElementById('auth-main-user');
+        const keyInput = document.getElementById('auth-main-key');
+        if (!labelInput || !keyInput) return;
+
+        const label = labelInput.value.trim();
+        const user = userInput.value.trim();
+        const key = keyInput.value.trim().replace(/\s+/g, '').toUpperCase();
+
+        if (!label || !key) {
+          showToast("Nama layanan dan Secret Key wajib diisi!", "warning");
+          return;
+        }
+
+        if (!/^[A-Z2-7]+$/.test(key)) {
+          showToast("Kunci tidak valid! Format Base32 hanya mendukung huruf A-Z dan angka 2-7.", "error");
+          return;
+        }
+
+        authenticatorKeys.push({ id: '2fa-' + Date.now(), label, user: user || '-', key, visible: false });
+        saveAuthenticatorKeys();
+        renderAuthenticatorKeys();
+
+        labelInput.value = '';
+        userInput.value = '';
+        keyInput.value = '';
+        showToast("Kunci 2FA dienkripsi secara aman dan disimpan!");
+      }
+
+      function toggle2FaVisibility(id) {
+        authenticatorKeys = authenticatorKeys.map(k => k.id === id ? { ...k, visible: !k.visible } : k);
+        renderAuthenticatorKeys();
+      }
+
+      function delete2FaKey(id) {
+        showCustomConfirm(
+          "Hapus Kunci 2FA?",
+          "Apakah Anda yakin ingin menghapus kunci Google Authenticator 2FA ini? Anda akan kehilangan akses kode OTP instan.",
+          () => {
+            authenticatorKeys = authenticatorKeys.filter(k => k.id !== id);
+            saveAuthenticatorKeys();
+            renderAuthenticatorKeys();
+            showToast("Kunci 2FA berhasil dihapus.");
+          },
+          "fa-trash-can"
+        );
+      }
+
+      // ==========================================
+      // QR CODE SCANNER & PARSING
+      // ==========================================
+      function toggleQrScanner() {
+        const wrapper = document.getElementById('qr-reader-wrapper');
+        const btnText = document.getElementById('text-btn-scan');
+        if (!wrapper || !btnText) return;
+
+        if (isScanning) {
+          stopQrScanner();
+        } else {
+          wrapper.classList.remove('hidden');
+          btnText.textContent = "Hentikan Kamera";
+          isScanning = true;
+          qrScannerObj = new Html5Qrcode("qr-reader");
+          qrScannerObj.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: (w, h) => { const s = Math.min(w, h) * 0.7; return { width: s, height: s }; } },
+            onQrScanSuccess,
+            onQrScanError
+          ).catch(err => {
+            showToast("Gagal mengakses kamera.", "error");
+            stopQrScanner();
+          });
+        }
+      }
+
+      function stopQrScanner() {
+        const wrapper = document.getElementById('qr-reader-wrapper');
+        const btnText = document.getElementById('text-btn-scan');
+        if (wrapper) wrapper.classList.add('hidden');
+        if (btnText) btnText.textContent = "Scan Kamera";
+        isScanning = false;
+        if (qrScannerObj) {
+          qrScannerObj.stop().then(() => { qrScannerObj = null; }).catch(() => { qrScannerObj = null; });
+        }
+      }
+
+      function onQrScanSuccess(decodedText) {
+        stopQrScanner();
+        showToast("QR Code berhasil dipindai!");
+        parseAndFill2Fa(decodedText);
+      }
+
+      function onQrScanError() {}
+
+      function triggerQrFileInput() {
+        const fileInput = document.getElementById('qr-file-input');
+        if (fileInput) fileInput.click();
+      }
+
+      function scanQrFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        showToast("Membaca berkas gambar...");
+        const html5QrCode = new Html5Qrcode("qr-reader");
+        html5QrCode.scanFile(file, true)
+          .then(decodedText => {
+            showToast("QR Code berhasil dibaca!", "success");
+            parseAndFill2Fa(decodedText);
+          })
+          .catch(() => {
+            showToast("Gagal mendeteksi QR Code.", "error");
+          });
+      }
+
+      function parseAndFill2Fa(decodedText) {
+        try {
+          if (decodedText.startsWith("otpauth://")) {
+            const urlObj = new URL(decodedText);
+            const pathParts = decodeURIComponent(urlObj.pathname).replace(/^\/\//, '').split(':');
+            let label = "Layanan 2FA", user = "-";
+            if (pathParts.length > 1) {
+              label = pathParts[0].trim();
+              user = pathParts[1].trim();
+            } else {
+              label = pathParts[0].trim();
+            }
+            const secretKey = urlObj.searchParams.get("secret");
+            const issuer = urlObj.searchParams.get("issuer");
+            if (issuer) label = issuer;
+
+            document.getElementById('auth-main-label').value = label;
+            document.getElementById('auth-main-user').value = user;
+            document.getElementById('auth-main-key').value = secretKey || "";
+            showToast("Data QR berhasil dibaca! Klik 'Simpan Kunci Baru'.", "success");
+          } else {
+            document.getElementById('auth-main-key').value = decodedText.trim().replace(/\s+/g, '').toUpperCase();
+            showToast("Kunci rahasia berhasil dimuat!", "success");
+          }
+        } catch (e) {
+          document.getElementById('auth-main-key').value = decodedText.trim().replace(/\s+/g, '').toUpperCase();
+        }
+      }
+
+      // ==========================================
+      // KALENDER & JADWAL OPERASIONAL
+      // ==========================================
+      function initCalendar() {
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const year = currentDateObj.getFullYear();
+        const month = currentDateObj.getMonth();
+        const monthYearEl = document.getElementById("calendar-month-year");
+        if (monthYearEl) {
+          monthYearEl.textContent = `${monthNames[month]} ${year}`;
+        }
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        const prevLastDay = new Date(year, month, 0).getDate();
+
+        const gridContainer = document.getElementById("calendar-days-grid");
+        if (!gridContainer) return;
+        gridContainer.innerHTML = '';
+
+        for (let i = firstDayIndex; i > 0; i--) {
+          const dayDiv = document.createElement("div");
+          dayDiv.className = "p-1.5 text-slate-300 dark:text-slate-700 select-none text-[11px] font-normal";
+          dayDiv.textContent = prevLastDay - i + 1;
+          gridContainer.appendChild(dayDiv);
+        }
+
+        const today = new Date();
+        const isCurrentMonthYear = today.getFullYear() === year && today.getMonth() === month;
+
+        for (let day = 1; day <= totalDays; day++) {
+          const dayDiv = document.createElement("div");
+          const currentDayOfWeek = new Date(year, month, day).getDay();
+          let weekendClass = "";
+          if (currentDayOfWeek === 0) weekendClass = " text-rose-500 dark:text-rose-400";
+          else if (currentDayOfWeek === 6) weekendClass = " text-rose-400/80";
+
+          dayDiv.className = "p-1.5 rounded-lg relative cursor-pointer hover:bg-blue-50 dark:hover:bg-slate-700 transition flex flex-col items-center justify-center text-[11px] font-bold" + weekendClass;
+          dayDiv.textContent = day;
+
+          const isoDateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+          if (isCurrentMonthYear && today.getDate() === day) {
+            dayDiv.className = "p-1.5 rounded-lg relative cursor-pointer bg-blue-600 text-white hover:bg-blue-700 transition flex flex-col items-center justify-center text-[11px] font-bold";
+          }
+
+          const matchedSystemEvents = dapodikEvents.filter(ev => ev.date === isoDateString);
+          const matchedUserNotes = notesData.filter(note => note.eventDate === isoDateString);
+          const hasEvents = (matchedSystemEvents.length > 0 || matchedUserNotes.length > 0);
+
+          if (hasEvents) {
+            const dot = document.createElement("span");
+            const colorClass = matchedSystemEvents.length > 0 ? matchedSystemEvents[0].color : "bg-sky-500 animate-pulse";
+            dot.className = `w-1.5 h-1.5 rounded-full absolute bottom-1 ${colorClass}`;
+            dayDiv.appendChild(dot);
+            dayDiv.onclick = () => showCombinedEvents(isoDateString, matchedSystemEvents, matchedUserNotes);
+          } else {
+            dayDiv.onclick = () => selectCalendarDate(isoDateString, day, monthNames[month]);
+          }
+          gridContainer.appendChild(dayDiv);
+        }
+      }
+
+      function prevMonth() { currentDateObj.setMonth(currentDateObj.getMonth() - 1); initCalendar(); }
+      function nextMonth() { currentDateObj.setMonth(currentDateObj.getMonth() + 1); initCalendar(); }
+
+      function showCombinedEvents(dateString, systemEvents, userNotes) {
+        const displayBox = document.getElementById("calendar-event-display");
+        if (!displayBox) return;
+        displayBox.innerHTML = '';
+
+        const noteDateInput = document.getElementById('note-date-input');
+        if (noteDateInput) noteDateInput.value = dateString;
+
+        const header = document.createElement("div");
+        header.className = "text-[10px] uppercase font-black tracking-wider text-blue-600 mb-2 flex justify-between";
+        header.innerHTML = `<span>Agenda & Catatan</span> <span class="font-mono">${dateString}</span>`;
+        displayBox.appendChild(header);
+
+        systemEvents.forEach(ev => {
+          const item = document.createElement("div");
+          item.className = "p-3 bg-slate-50 dark:bg-slate-900 border-l-4 border-blue-500 rounded-2xl space-y-1 mb-2";
+          item.innerHTML = `<h4 class="text-xs font-black text-slate-900 dark:text-white">${ev.title}</h4><p class="text-[11px] text-slate-500 leading-relaxed">${ev.desc}</p>`;
+          displayBox.appendChild(item);
+        });
+
+        userNotes.forEach(note => {
+          const item = document.createElement("div");
+          item.className = "p-3 bg-blue-50/50 dark:bg-slate-900/50 border-l-4 border-sky-400 rounded-2xl space-y-1 mb-2 cursor-copy";
+          item.onclick = () => copyText(note.body, "Memo disalin!");
+          item.innerHTML = `<h4 class="text-xs font-black text-slate-900 dark:text-white">${note.title}</h4><p class="text-[11px] text-slate-500 leading-relaxed">${note.body}</p>`;
+          displayBox.appendChild(item);
+        });
+        showToast("Tanggal terpilih!");
+      }
+
+      // ==========================================
+      // ASISTEN NAVIGATION & SWITCH SUB TAB
+      // ==========================================
+      function switchAsistenTab(tabId) {
+        const tabs = ['agenda', 'kalender', 'alat'];
+        tabs.forEach(t => {
+          const btn = document.getElementById(`btn-tab-${t}`);
+          const panel = document.getElementById(`panel-tab-${t}`);
+          
+          if (!btn || !panel) return;
+
+          if (t === tabId) {
+            btn.className = "flex-1 py-2 px-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-blue-600 shadow-sm";
+            panel.classList.remove('hidden');
+          } else {
+            btn.className = "flex-1 py-2 px-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-800";
+            panel.classList.add('hidden');
+          }
+        });
+      }
+
+      function switchSubTab(subId) {
+        const btnTugas = document.getElementById('btn-sub-tugas');
+        const btnMemo = document.getElementById('btn-sub-memo');
+        const panelTugas = document.getElementById('sub-panel-tugas');
+        const panelMemo = document.getElementById('sub-panel-memo');
+
+        if (!btnTugas || !btnMemo || !panelTugas || !panelMemo) return;
+
+        if (subId === 'tugas') {
+          btnTugas.className = "flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all bg-white dark:bg-slate-800 text-blue-600 shadow-xs";
+          btnMemo.className = "flex-1 py-1.5 text-[10px] font-bold rounded-lg transition-all text-slate-500";
+          panelTugas.classList.remove('hidden');
+          panelMemo.classList.add('hidden');
+        } else {
+          btnMemo.className = "flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all bg-white dark:bg-slate-800 text-blue-600 shadow-xs";
+          btnTugas.className = "flex-1 py-1.5 text-[10px] font-bold rounded-lg transition-all text-slate-500";
+          panelMemo.classList.remove('hidden');
+          panelTugas.classList.add('hidden');
+        }
+      }
+
+      function selectCalendarDate(dateString, day, monthName) {
+        const noteDateInput = document.getElementById('note-date-input');
+        if (noteDateInput) noteDateInput.value = dateString;
+        const displayBox = document.getElementById("calendar-event-display");
+        if (displayBox) {
+          displayBox.innerHTML = `
+            <div class="p-3 bg-slate-50/50 dark:bg-slate-900/40 rounded-2xl text-center">
+              <span class="text-[10px] font-mono">Tanggal ${day} ${monthName}</span>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 italic">Tidak ada agenda sistem di tanggal ini. Siap ditambahkan catatan baru!</p>
+            </div>
+          `;
+        }
+        showToast("Tanggal terpilih!");
+      }
+
+      function addQuickNote() {
+        const title = document.getElementById('note-title-input').value.trim();
+        const body = document.getElementById('note-body-input').value.trim();
+        const eventDate = document.getElementById('note-date-input').value;
+        if (!title || !body) { showToast("Judul & Isi memo wajib diisi!", "warning"); return; }
+        notesData.unshift({ id: 'n-'+Date.now(), title, body, eventDate: eventDate || null, createdAt: Date.now() });
+        saveNotes(); 
+        renderQuickNotes();
+        document.getElementById('note-title-input').value = '';
+        document.getElementById('note-body-input').value = '';
+        document.getElementById('note-date-input').value = '';
+        initCalendar();
+        closeAddMemoModal(); 
+        showToast("Memo berhasil disimpan!");
+      }
+
+      function renderQuickNotes() {
+        const container = document.getElementById('quick-notes-list');
+        if (!container) return;
+        container.innerHTML = '';
+        notesData.forEach(n => {
+          const div = document.createElement('div');
+          div.className = 'p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 rounded-xl relative group cursor-copy';
+          div.onclick = () => copyText(n.body, "Isi memo disalin!");
+          div.innerHTML = `
+            <div class="flex justify-between items-start mb-1 font-sans">
+              <h5 class="text-[10px] font-black uppercase text-blue-600">${n.title}</h5>
+              <button onclick="event.stopPropagation(); deleteQuickNote('${n.id}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash-can text-[9px]"></i></button>
+            </div>
+            <p class="text-[10px] line-clamp-3 leading-relaxed text-slate-600 dark:text-slate-400 font-sans">${n.body}</p>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      function deleteQuickNote(id) {
+        showCustomConfirm(
+          "Hapus Memo?",
+          "Apakah Anda yakin ingin menghapus catatan buku saku ini secara permanen?",
+          () => {
+            notesData = notesData.filter(n => n.id !== id);
+            saveNotes();
+            renderQuickNotes();
+            initCalendar();
+            showToast("Memo berhasil dihapus.");
+          },
+          "fa-trash-can"
+        );
+      }
+
+      // ==========================================
+      // SECURE PASSWORD GENERATOR
+      // ==========================================
+      function generateSecurePassword() {
+        const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const lowercase = "abcdefghijklmnopqrstuvwxyz";
+        const numbers = "0123456789";
+        const symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+        
+        let password = "";
+        password += uppercase[Math.floor(Math.random() * uppercase.length)];
+        password += lowercase[Math.floor(Math.random() * lowercase.length)];
+        password += numbers[Math.floor(Math.random() * numbers.length)];
+        password += symbols[Math.floor(Math.random() * symbols.length)];
+        
+        const allChars = uppercase + lowercase + numbers + symbols;
+        const length = 12;
+        for (let i = password.length; i < length; i++) {
+          password += allChars[Math.floor(Math.random() * allChars.length)];
+        }
+        
+        password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+        const passwordInput = document.getElementById('generated-password-input');
+        if (passwordInput) {
+          passwordInput.value = password;
+        }
+        copyText(password, "Kata sandi dibuat dan langsung disalin!");
+      }
+
+      function copyGeneratedPassword() {
+        const passwordInput = document.getElementById('generated-password-input');
+        if (passwordInput && passwordInput.value && passwordInput.value !== "Sandi...") {
+          copyText(passwordInput.value, "Kata sandi berhasil disalin!");
+        } else {
+          showToast("Harap buat kata sandi terlebih dahulu!", "warning");
+        }
+      }
+
+      function calculatePpdbAge() {
+        const dobVal = document.getElementById('ppdb-dob-input').value;
+        const resultDiv = document.getElementById('ppdb-age-result');
+        if (!resultDiv) return;
+        if (!dobVal) { showToast("Harap tentukan tanggal lahir siswa!", "warning"); return; }
+        const dob = new Date(dobVal);
+        const targetDate = new Date("2026-07-01");
+        if (dob > targetDate) {
+          resultDiv.classList.remove('hidden');
+          resultDiv.innerHTML = `<span class="text-rose-500 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Tanggal lahir melampaui 1 Juli 2026!</span>`;
+          return;
+        }
+        let years = targetDate.getFullYear() - dob.getFullYear();
+        let months = targetDate.getMonth() - dob.getMonth();
+        let days = targetDate.getDate() - dob.getDate();
+        if (days < 0) { months--; days += new Date(targetDate.getFullYear(), targetDate.getMonth(), 0).getDate(); }
+        if (months < 0) { years--; months += 12; }
+        let kelayakanText = "";
+        let colorClass = "";
+        if (years >= 12 && years <= 15) {
+          kelayakanText = "Memenuhi Syarat Usia PPDB SMP (12-15 Tahun)";
+          colorClass = "text-emerald-600 dark:text-emerald-400 font-bold";
+        } else if (years < 12) {
+          kelayakanText = "Terlalu Muda (< 12 Tahun) - Butuh rekomendasi psikolog";
+          colorClass = "text-amber-500 dark:text-amber-400 font-bold";
+        } else {
+          kelayakanText = "Melebihi Batas Usia Maksimal PPDB SMP (> 15 Tahun)";
+          colorClass = "text-rose-600 dark:text-rose-400 font-bold";
+        }
+        resultDiv.classList.remove('hidden');
+        resultDiv.innerHTML = `<div class="space-y-1 font-sans"><p class="text-slate-500 dark:text-slate-400">Usia per 1 Juli 2026:</p><p class="font-mono text-xs font-black text-slate-800 dark:text-slate-200">${years} Tahun, ${months} Bulan, ${days} Hari</p><p class="${colorClass} mt-1 text-[10px] leading-tight"><i class="fa-solid fa-shield-halved"></i> ${kelayakanText}</p></div>`;
+      }
+
+      // ==========================================
+      // COUNTDOWN TIMER TO 31 AGUSTUS 2026
+      // ==========================================
+      function startCutOffCountdown() {
+        const targetDate = new Date("Aug 31, 2026 23:59:59").getTime();
+
+        function updateCountdown() {
+          const now = new Date().getTime();
+          const distance = targetDate - now;
+
+          const daysEl = document.getElementById("countdown-days");
+          const hoursEl = document.getElementById("countdown-hours");
+          const minutesEl = document.getElementById("countdown-minutes");
+          const secondsEl = document.getElementById("countdown-seconds");
+
+          if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+          if (distance < 0) {
+            daysEl.textContent = "00";
+            hoursEl.textContent = "00";
+            minutesEl.textContent = "00";
+            secondsEl.textContent = "00";
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          daysEl.textContent = String(days).padStart(2, '0');
+          hoursEl.textContent = String(hours).padStart(2, '0');
+          minutesEl.textContent = String(minutes).padStart(2, '0');
+          secondsEl.textContent = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+      }
+
+      // ==========================================
+      // BACKUP EKSPOR / IMPOR PORTAL DATA
+      // ==========================================
+      function exportBackupData() {
+        const backupPayload = {
+          links: linksData,
+          agendas: agendaData,
+          notes: notesData,
+          templates: waTemplates,
+          authKeys: authenticatorKeys,
+          exportedAt: Date.now(),
+          owner: "Rahmat Rahim"
+        };
+        
+        const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const downloadNode = document.createElement('a');
+        downloadNode.setAttribute("href", url);
+        downloadNode.setAttribute("download", `dapohub_spentig_backup_${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(downloadNode);
+        downloadNode.click();
+        downloadNode.remove();
+        URL.revokeObjectURL(url);
+        showToast("Berkas cadangan data terenkripsi berhasil diunduh!");
+      }
+
+      function triggerImportData() {
+        document.getElementById('import-file-input').click();
+      }
+
+      function importBackupData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const parsedData = JSON.parse(e.target.result);
+            if (parsedData.links && parsedData.agendas && parsedData.notes) {
+              linksData = parsedData.links;
+              agendaData = parsedData.agendas;
+              notesData = parsedData.notes;
+              
+              if (parsedData.templates) {
+                waTemplates = parsedData.templates;
+                saveWaTemplates();
+              }
+              
+              if (parsedData.authKeys) {
+                authenticatorKeys = parsedData.authKeys;
+                saveAuthenticatorKeys();
+              } else {
+                authenticatorKeys = [];
+                saveAuthenticatorKeys();
+              }
+              
+              saveLinks();
+              saveAgenda();
+              saveNotes();
+              
+              renderAll();
+              initCalendar();
+              populateWaSelect();
+              renderAuthenticatorKeys();
+              showToast("Data cadangan berhasil dipulihkan & dienkripsi ulang!", "success");
+            } else {
+              showToast("Format berkas cadangan JSON tidak valid.", "error");
+            }
+          } catch (err) {
+            showToast("Gagal membaca berkas cadangan JSON. Berkas mungkin rusak.", "error");
+          }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+      }
+
+      function copyText(textToCopy, successMessage) {
+        const dummyTextarea = document.createElement('textarea');
+        dummyTextarea.value = textToCopy;
+        document.body.appendChild(dummyTextarea);
+        dummyTextarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummyTextarea);
+        showToast(successMessage || "Teks berhasil disalin!");
+      }
+
+      function shareProfile() {
+        copyText(window.location.href, "Tautan portal berhasil disalin! Silakan bagikan ke rekan operator lainnya.");
+      }
+
+      function clearSearchInput() {
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) searchInput.value = '';
+        filterLinksOrKeys();
+      }
+
+      // ==========================================
+      // THEME & LURING CONFIGURATION
+      // ==========================================
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        initCalendar();
+      }
+
+      (function initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        const icon = document.getElementById('theme-icon');
+        
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+          if (icon) icon.className = 'fa-solid fa-sun';
+        } else {
+          document.documentElement.classList.remove('dark');
+          if (icon) icon.className = 'fa-solid fa-moon';
+        }
+      })();
+
+      // ==========================================
+      // WINDOW GLOBAL EXPOSURE & BINDINGS
+      // ==========================================
+      window.selectCategory = selectCategory;
+      window.filterLinksOrKeys = filterLinksOrKeys;
+      window.switchAsistenTab = switchAsistenTab;
+      window.switchSubTab = switchSubTab;
+      
+      window.openAddAgendaModal = () => { 
+        const m = document.getElementById('add-agenda-modal');
+        m.classList.remove('opacity-0','pointer-events-none'); 
+        m.children[0].classList.remove('scale-95');
+        m.children[0].classList.add('scale-100'); 
+      };
+      window.closeAddAgendaModal = () => { 
+        const m = document.getElementById('add-agenda-modal');
+        m.classList.add('opacity-0','pointer-events-none'); 
+        m.children[0].classList.remove('scale-100');
+        m.children[0].classList.add('scale-95'); 
+      };
+      
+      window.openAddMemoModal = () => { 
+        const m = document.getElementById('add-memo-modal');
+        m.classList.remove('opacity-0','pointer-events-none'); 
+        m.children[0].classList.remove('scale-95');
+        m.children[0].classList.add('scale-100'); 
+      };
+      window.closeAddMemoModal = () => { 
+        const m = document.getElementById('add-memo-modal');
+        m.classList.add('opacity-0','pointer-events-none'); 
+        m.children[0].classList.remove('scale-100');
+        m.children[0].classList.add('scale-95'); 
+      };
+      
+      window.openAddLinkModal = () => { 
+        const m = document.getElementById('add-link-modal');
+        m.classList.remove('opacity-0','pointer-events-none'); 
+        m.children[0].classList.remove('scale-95');
+        m.children[0].classList.add('scale-100'); 
+      };
+      window.closeAddLinkModal = () => { 
+        const m = document.getElementById('add-link-modal');
+        m.classList.add('opacity-0','pointer-events-none'); 
+        m.children[0].classList.remove('scale-100');
+        m.children[0].classList.add('scale-95'); 
+      };
+
+      window.saveCustomLinkLocal = saveCustomLinkLocal;
+      window.deleteCustomLink = deleteCustomLink;
+      window.resetToDefaultLinks = resetToDefaultLinks;
+      window.addAgendaItem = addAgendaItem;
+      window.toggleTaskDone = toggleTaskDone;
+      window.deleteAgendaItem = deleteAgendaItem;
+      window.addQuickNote = addQuickNote;
+      window.deleteQuickNote = deleteQuickNote;
+      window.generateSecurePassword = generateSecurePassword;
+      window.copyGeneratedPassword = copyGeneratedPassword;
+      window.save2FaKeyFromMain = save2FaKeyFromMain;
+      window.toggle2FaVisibility = toggle2FaVisibility;
+      window.delete2FaKey = delete2FaKey;
+      window.toggleQrScanner = toggleQrScanner;
+      window.triggerQrFileInput = triggerQrFileInput;
+      window.scanQrFile = scanQrFile;
+      window.prevMonth = prevMonth;
+      window.nextMonth = nextMonth;
+      window.calculatePpdbAge = calculatePpdbAge;
+      window.copyBroadcastMessage = copyBroadcastMessage;
+      window.sendBroadcastWhatsApp = sendBroadcastWhatsApp;
+      window.openTemplatesModal = openTemplatesModal;
+      window.closeTemplatesModal = closeTemplatesModal;
+      window.showAddTemplateForm = showAddTemplateForm;
+      window.hideTemplateForm = hideTemplateForm;
+      window.saveTemplate = saveTemplate;
+      window.editTemplate = editTemplate;
+      window.deleteTemplate = deleteTemplate;
+      window.shareProfile = shareProfile;
+      window.clearSearchInput = clearSearchInput;
+      window.copyText = copyText;
+      window.exportBackupData = exportBackupData;
+      window.triggerImportData = triggerImportData;
+      window.importBackupData = importBackupData;
+      window.toggleTheme = toggleTheme;
+      window.unlockSession = unlockSession;
+      window.downloadPwaFile = downloadPwaFile;
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initData();
+      });
+    </script>
+  </body>
+</html>
