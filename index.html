@@ -588,13 +588,90 @@
     </div>
 
     <script>
-      // ==========================================================
+      // ==========================================
+      // 0. ANTI-INSPECT & DEVTOOLS BLOCKER
+      // ==========================================
+      (function() {
+        // Blokir Klik Kanan
+        document.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          if (typeof showToast === 'function') {
+            showToast("⚠️ Klik kanan dinonaktifkan untuk perlindungan data!", "warning");
+          }
+        });
+
+        // Blokir Shortcut Keyboard untuk Inspeksi
+        document.addEventListener('keydown', function(e) {
+          // F12 (123)
+          if (e.keyCode === 123 || e.key === 'F12') {
+            e.preventDefault();
+            if (typeof showToast === 'function') showToast("⚠️ Akses DevTools dilarang!", "error");
+            return false;
+          }
+          // Ctrl+Shift+I / Cmd+Opt+I (Inspect)
+          if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) {
+            e.preventDefault();
+            if (typeof showToast === 'function') showToast("⚠️ Inspeksi kode dilarang!", "error");
+            return false;
+          }
+          // Ctrl+Shift+J / Cmd+Opt+J (Console)
+          if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) {
+            e.preventDefault();
+            if (typeof showToast === 'function') showToast("⚠️ Akses konsol dinonaktifkan!", "error");
+            return false;
+          }
+          // Ctrl+Shift+C / Cmd+Opt+C (Element Selector)
+          if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 67 || e.key === 'C' || e.key === 'c')) {
+            e.preventDefault();
+            if (typeof showToast === 'function') showToast("⚠️ Inspeksi elemen dilarang!", "error");
+            return false;
+          }
+          // Ctrl+U (View Source)
+          if ((e.ctrlKey || e.metaKey) && (e.keyCode === 85 || e.key === 'U' || e.key === 'u')) {
+            e.preventDefault();
+            if (typeof showToast === 'function') showToast("⚠️ Dilarang melihat kode sumber halaman!", "error");
+            return false;
+          }
+          // Ctrl+S (Save Page)
+          if ((e.ctrlKey || e.metaKey) && (e.keyCode === 83 || e.key === 'S' || e.key === 's')) {
+            e.preventDefault();
+            if (typeof showToast === 'function') showToast("⚠️ Penyimpanan lokal halaman dinonaktifkan!", "warning");
+            return false;
+          }
+        });
+
+        // Loop debugger tak terbatas untuk mencegah analisis kode luring (Freeze DevTools)
+        setInterval(function() {
+          (function() {
+            const start = new Date();
+            debugger; // Akan menahan eksekusi jika konsol DevTools terbuka
+            const end = new Date();
+            if (end - start > 100) {
+              // Jika terdeteksi jeda lama (DevTools terbuka), kunci/reset tampilan
+              document.body.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white font-space text-center p-6 space-y-4">
+                  <div class="w-20 h-20 rounded-full bg-rose-500/20 border border-rose-500 text-rose-500 flex items-center justify-center text-3xl animate-pulse">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </div>
+                  <h1 class="text-xl sm:text-2xl font-black">Akses Ilegal Terdeteksi</h1>
+                  <p class="text-xs sm:text-sm text-slate-400 max-w-md leading-relaxed">
+                    Sistem mendeteksi adanya upaya inspeksi kode (DevTools dibuka). Sesi dimatikan demi keamanan token 2FA & kredensial sekolah. Harap segarkan kembali halaman tanpa membuka DevTools.
+                  </p>
+                  <button onclick="window.location.reload()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-xl text-xs font-bold transition">Segarkan Halaman</button>
+                </div>
+              `;
+            }
+          })();
+        }, 1000);
+      })();
+
+      // ==========================================
       // 1. GLOBAL CONFIGURATION (Edit di satu tempat ini)
-      // ==========================================================
+      // ==========================================
       const CONFIG = {
         // Identitas Instansi Sekolah & Operator
         SCHOOL_NAME_LONG: "UPT SPF SMP Negeri 7 Makassar",
-        SCHOOL_NAME_SHORT: "SMPN 7 Makassar",
+        SCHOOL_NAME_SHORT: "SMP Negeri 7 Makassar",
         SCHOOL_CODE_ABBR: "SPENSEV", 
         NPSN: "40312922",
         OPERATOR_NAME: "SUARMIN S",
@@ -780,6 +857,7 @@
         modal.children[0].classList.replace('scale-95', 'scale-100');
       }
 
+      // Tutup Custom Confirm Modal
       function closeCustomConfirm(approved = false) {
         const modal = document.getElementById('custom-confirm-modal');
         modal.classList.add('opacity-0', 'pointer-events-none');
@@ -1188,6 +1266,7 @@
         m.children[0].classList.replace('scale-95','scale-100');
       }
 
+      // Tutup Modal Agenda
       function closeAddAgendaModal() {
         const m = document.getElementById('add-agenda-modal');
         m.classList.add('opacity-0','pointer-events-none');
@@ -1568,7 +1647,7 @@
         ];
         notesData = secureRead(CONFIG.STORAGE_PREFIX + 'notes') || [];
         authenticatorKeys = secureRead(CONFIG.STORAGE_PREFIX + 'auth-keys') || [
-          { id: '2fa-seed-myasn', label: 'MyASN BKN (Contoh)', user: 'suarmin@bkn.go.id', key: 'JBSWY3DPEHPK3PXP' }
+          { id: '2fa-seed-myasn', label: 'MyASN BKN (Contoh)', user: 'admin@bkn.go.id', key: 'JBSWY3DPEHPK3PXP' }
         ];
         waTemplates = secureRead(CONFIG.STORAGE_PREFIX + 'wa-templates') || [...defaultWaTemplates];
         
