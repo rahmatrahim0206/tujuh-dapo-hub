@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#2563eb">
     <link class="apple-touch-icon" rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2210/2210143.png">
     
-    <!-- Link Manifest PWA -->
+    <!-- Link Manifest PWA & Favicon -->
     <link rel="manifest" href="./manifest.json" id="pwa-manifest-link">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2210/2210143.png">
     
@@ -75,7 +75,7 @@
   </head>
   <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300 relative">
     
-    <!-- HEADER BAR (Lebar maksimum ditingkatkan ke max-w-[130rem] dengan padding tepi lebih renggang di layar besar) -->
+    <!-- HEADER BAR -->
     <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
       <div class="max-w-[130rem] mx-auto px-4 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-2 sm:space-x-3">
@@ -84,19 +84,22 @@
           </div>
           <div>
             <h1 class="text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
-              DAPO-HUB <span class="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200 text-[10px] px-1.5 py-0.5 rounded font-mono font-bold">Pro v2.0</span>
+              DAPO-HUB <span class="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200 text-[10px] px-1.5 py-0.5 rounded font-mono font-bold">Pro v2.3</span>
             </h1>
-            <p id="view-school-header" class="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400">Memuat nama sekolah...</p>
+            <p id="view-school-header" class="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400">Menghubungkan ke basis data sekolah...</p>
           </div>
         </div>
 
         <div class="flex items-center space-x-3 sm:space-x-4">
           <div class="hidden sm:flex flex-col items-end font-mono text-[10px] md:text-xs text-slate-500 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 pr-3 md:pr-4">
-            <span id="header-date" class="font-medium text-slate-400">Memuat tanggal...</span>
+            <span id="header-date" class="font-medium text-slate-400">Sinkronisasi waktu...</span>
             <span id="header-time" class="font-bold text-slate-700 dark:text-slate-200">WITA</span>
           </div>
-          <button onclick="toggleTheme()" class="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all duration-200" aria-label="Ganti Tema">
+          <button onclick="toggleTheme()" class="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all duration-200" title="Ganti Mode Tampilan" aria-label="Ganti Tema">
             <i id="theme-icon" class="fa-solid fa-moon"></i>
+          </button>
+          <button onclick="triggerEmergencyReset()" class="p-2 sm:p-2.5 rounded-xl bg-rose-100 dark:bg-rose-950/40 hover:bg-rose-200 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 transition-all duration-200" title="Reset Darurat Sesi dan Penghapusan Data Permanen" aria-label="Reset Darurat">
+            <i class="fa-solid fa-power-off"></i>
           </button>
         </div>
       </div>
@@ -115,7 +118,7 @@
                     <span id="view-school-badge" class="text-[8px] font-bold text-slate-400 font-mono tracking-widest mt-1">DAPO</span>
                   </div>
                 </div>
-                <span id="status-badge" class="absolute -bottom-1 -right-1 block h-5 w-5 rounded-full ring-4 ring-white dark:ring-slate-800 bg-emerald-500 flex items-center justify-center text-[10px] text-white font-bold transition-colors duration-300" title="Koneksi Aktif">
+                <span id="status-badge" class="absolute -bottom-1 -right-1 block h-5 w-5 rounded-full ring-4 ring-white dark:ring-slate-800 bg-emerald-500 flex items-center justify-center text-[10px] text-white font-bold transition-colors duration-300" title="Status Jaringan">
                   <i id="status-badge-icon" class="fa-solid fa-hard-drive"></i>
                 </span>
               </div>
@@ -123,10 +126,10 @@
                 <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                   <h2 id="view-operator-name" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-space">Memuat...</h2>
                   <span id="status-text-badge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200/50 transition-colors duration-300">
-                    <span id="status-pulse-dot" class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span id="status-label">Online</span>
+                    <span id="status-pulse-dot" class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span id="status-label">Terhubung</span>
                   </span>
                 </div>
-                <p class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 mt-1">Operator Dapodik & IT Support</p>
+                <p class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 mt-1">Operator Dapodik &amp; IT Support</p>
                 <div class="flex flex-wrap justify-center sm:justify-start gap-y-1.5 gap-x-4 mt-3 text-[11px] text-slate-500 dark:text-slate-400 font-medium font-space">
                   <span id="view-school-profile" class="cursor-pointer hover:text-blue-500 transition"></span>
                   <span id="view-npsn-profile" class="cursor-pointer hover:text-blue-500 transition font-mono"></span>
@@ -137,8 +140,8 @@
               <a href="http://localhost:5774" target="_blank" class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md hover:bg-blue-700 transition" title="Dapodik Lokal"><i class="fa-solid fa-laptop text-lg"></i></a>
               <button onclick="openAddLinkModal()" class="w-11 h-11 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md hover:bg-emerald-700 transition" title="Tambah Link"><i class="fa-solid fa-plus text-lg"></i></button>
               <button onclick="resetToDefaultLinks()" class="w-11 h-11 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-md hover:bg-amber-600 transition" title="Reset Links"><i class="fa-solid fa-arrows-rotate text-lg"></i></button>
-              <button onclick="exportBackupData()" class="w-11 h-11 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md hover:bg-indigo-700 transition" title="Export JSON"><i class="fa-solid fa-file-export text-lg"></i></button>
-              <button onclick="triggerImportData()" class="w-11 h-11 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md hover:bg-teal-700 transition" title="Import JSON"><i class="fa-solid fa-file-import text-lg"></i></button>
+              <button onclick="exportBackupData()" class="w-11 h-11 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md hover:bg-indigo-700 transition" title="Pencadangan Data (Backup)"><i class="fa-solid fa-cloud-arrow-down text-lg"></i></button>
+              <button onclick="triggerImportData()" class="w-11 h-11 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md hover:bg-teal-700 transition" title="Pemulihan Data (Restore)"><i class="fa-solid fa-cloud-arrow-up text-lg"></i></button>
             </div>
           </div>
         </div>
@@ -194,22 +197,22 @@
                   <!-- PROGRESS BAR SISA DETIK OTP -->
                   <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 dark:text-slate-500">
                     <i class="fa-solid fa-arrows-rotate animate-spin-slow"></i>
-                    <span>Sisa: <span id="otp-timer-text" class="font-mono text-blue-600 dark:text-blue-400 font-black">30</span>s</span>
+                    <span>Sisa Waktu: <span id="otp-timer-text" class="font-mono text-blue-600 dark:text-blue-400 font-black">30</span>s</span>
                     <div class="w-12 h-1.5 bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden">
                       <div id="otp-progress-bar" class="h-full bg-blue-600 rounded-full transition-all duration-1000" style="width: 100%"></div>
                     </div>
                   </div>
                 </header>
 
-                <!-- CONTAINER GRID TOKEN OTP (Dikunci konsisten maksimum 2 kolom pada layar monitor lebar) -->
-                <div id="main-authenticator-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <!-- JS Rendered -->
+                <!-- CONTAINER GRID TOKEN OTP -->
+                <div id="main-authenticator-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Diisi secara dinamis menggunakan JS -->
                 </div>
 
-                <!-- CATATAN KAKI KEAMANAN -->
-                <footer class="pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-medium">
-                  <span class="flex items-center gap-1"><i class="fa-solid fa-lock text-emerald-500"></i> Seluruh data 2FA dienkripsi secara lokal di browser Anda.</span>
-                  <span class="font-mono text-[9px]">Sistem TOTP RFC 6238</span>
+                <!-- CATATAN KEAMANAN -->
+                <footer class="pt-3 border-t border-slate-100 dark:border-slate-700/60 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-medium gap-2">
+                  <span class="flex items-center gap-1"><i class="fa-solid fa-lock text-emerald-500"></i> Seluruh data 2FA disimpan secara lokal di browser Anda dengan enkripsi.</span>
+                  <span class="font-mono text-[9px]">Sistem TOTP RFC 6238 / Migrasi G-Auth</span>
                 </footer>
               </div>
 
@@ -217,7 +220,7 @@
               <div class="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-3xl border border-slate-200/60 dark:border-slate-700/60 shadow-md space-y-5">
                 <header class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-700">
                   <h3 class="font-space font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-qrcode text-emerald-500"></i> Setup & Pindai 2FA
+                    <i class="fa-solid fa-qrcode text-emerald-500"></i> Setup &amp; Pindai 2FA
                   </h3>
                 </header>
 
@@ -226,15 +229,16 @@
                   <div class="space-y-3 bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800">
                     <div class="flex flex-col gap-2">
                       <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-camera text-emerald-500"></i> Pindai / Unggah QR Code
+                        <i class="fa-solid fa-camera text-emerald-500"></i> Pindai / Unggah Kode QR
                       </h4>
+                      <p class="text-[9px] text-slate-400 leading-tight">Mendukung Kode QR TOTP standar serta Kode QR ekspor massal dari Google Authenticator.</p>
                       <div class="grid grid-cols-2 gap-2">
                         <!-- Tombol Scan Kamera -->
                         <button id="btn-toggle-scan" onclick="toggleQrScanner()" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded-xl transition flex items-center justify-center gap-1">
-                          <i class="fa-solid fa-camera"></i> <span id="text-btn-scan">Scan Kamera</span>
+                          <i class="fa-solid fa-camera"></i> <span id="text-btn-scan">Pindai Kamera</span>
                         </button>
                         <!-- Tombol Upload Berkas Foto QR -->
-                        <button onclick="triggerQrFileInput()" class="px-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold rounded-xl transition flex items-center justify-center gap-1">
+                        <button onclick="triggerQrFileInput()" class="px-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold rounded-xl transition flex items-center justify-center gap-1" title="Unggah berkas tangkapan layar kode QR">
                           <i class="fa-solid fa-upload"></i> Unggah Foto
                         </button>
                       </div>
@@ -255,12 +259,12 @@
                         </div>
                         <div>
                           <label class="block text-[9px] font-black uppercase text-slate-400 mb-1">User/Email</label>
-                          <input type="text" id="auth-main-user" placeholder="rahmat@gmail.com" class="w-full text-xs p-2.5 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 bg-white outline-none focus:ring-1 focus:ring-blue-500" />
+                          <input type="text" id="auth-main-user" placeholder="nama@email.com" class="w-full text-xs p-2.5 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 bg-white outline-none focus:ring-1 focus:ring-blue-500" />
                         </div>
                       </div>
                       <div>
                         <label class="block text-[9px] font-black uppercase text-slate-400 mb-1">Kunci Rahasia (Secret Key)</label>
-                        <input type="text" id="auth-main-key" placeholder="Contoh: JBSWY3DPEHPK3PXP" class="w-full text-xs p-2.5 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 bg-white font-mono outline-none focus:ring-1 focus:ring-blue-500" />
+                        <input type="text" id="auth-main-key" placeholder="Contoh: JBSWY 3DPEH PK3P XP" class="w-full text-xs p-2.5 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 bg-white font-mono outline-none focus:ring-1 focus:ring-blue-500" />
                       </div>
                       <button onclick="save2FaKeyFromMain()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl transition shadow-md shadow-blue-500/10 flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-save"></i> Simpan Kunci Baru
@@ -280,8 +284,8 @@
 
           <div id="no-results-message" class="hidden text-center py-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-8">
             <div class="text-slate-300 text-5xl mb-4"><i class="fa-solid fa-circle-exclamation"></i></div>
-            <h4 class="text-lg font-bold dark:text-white">Tautan Tidak Ditemukan</h4>
-            <p class="text-sm text-slate-500 mt-1 max-w-sm mx-auto">Kami tidak dapat menemukan tautan yang sesuai dengan pencarian Anda.</p>
+            <h4 class="text-lg font-bold dark:text-white">Pencarian Tidak Ditemukan</h4>
+            <p class="text-sm text-slate-500 mt-1 max-w-sm mx-auto">Sistem tidak dapat menemukan tautan situs atau akun OTP yang sesuai dengan kata kunci Anda.</p>
           </div>
         </section>
 
@@ -297,9 +301,9 @@
               <header>
                 <span class="text-[9px] font-black tracking-widest bg-blue-50 dark:bg-slate-900 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-full uppercase">BATAS SINKRONISASI</span>
                 <h3 id="view-cutoff-title" class="font-space font-extrabold text-base tracking-wide flex items-center gap-2 mt-3 mb-1 text-rose-600 dark:text-rose-400">
-                  <i class="fa-solid fa-clock-rotate-left animate-pulse"></i> Memuat Judul...
+                  <i class="fa-solid fa-clock-rotate-left animate-pulse"></i> Menghitung waktu...
                 </h3>
-                <p id="view-cutoff-desc" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Memuat keterangan batas waktu penarikan...</p>
+                <p id="view-cutoff-desc" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Memproses sisa waktu sinkronisasi data Dapodik...</p>
               </header>
               
               <!-- Real-time Countdown Grid -->
@@ -324,7 +328,7 @@
 
               <!-- NOTIFIKASI TUGAS AKTIF SINKRONISASI -->
               <div id="countdown-active-task-box" class="pt-3.5 border-t border-slate-100 dark:border-slate-700/60 space-y-2">
-                <span class="text-[9px] font-black tracking-widest text-blue-600 dark:text-blue-400 uppercase block">🎯 Fokus Utama Saat Ini</span>
+                <span class="text-[9px] font-black tracking-widest text-blue-600 dark:text-blue-400 uppercase block">🎯 Prioritas Utama Saat Ini</span>
                 <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-start justify-between gap-3 shadow-xs">
                   <span id="countdown-active-task-text" class="text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-300 break-words flex-1">Memuat tugas aktif...</span>
                   <button id="countdown-active-task-btn" class="text-blue-600 hover:text-emerald-500 font-bold text-xs flex-shrink-0 transition-colors hidden" title="Tandai Selesai">
@@ -336,7 +340,7 @@
               <footer class="flex items-center justify-between pt-2 text-[10px] text-slate-500 dark:text-slate-400 font-bold">
                 <span id="view-cutoff-footer-target">Target: -</span>
                 <span class="flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span> Live Countdown
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span> Real-time
                 </span>
               </footer>
             </div>
@@ -358,18 +362,18 @@
               <div id="panel-tab-agenda" class="space-y-4">
                 <!-- Switcher Internal -->
                 <div class="flex p-1 bg-slate-100 dark:bg-slate-900 rounded-xl gap-1">
-                  <button id="btn-sub-tugas" onclick="switchSubTab('tugas')" class="flex-1 py-1.5 text-[10px] font-black rounded-lg transition-all bg-white dark:bg-slate-800 text-blue-600 shadow-xs rounded-lg">DAFTAR TUGAS</button>
-                  <button id="btn-sub-memo" onclick="switchSubTab('memo')" class="flex-1 py-1.5 text-[10px] font-bold rounded-lg transition-all text-slate-500">BUKU SAKU (MEMO)</button>
+                  <button id="btn-sub-tugas" onclick="switchSubTab('tugas')" class="flex-1 py-1.5 text-[10px] font-black bg-white dark:bg-slate-800 text-blue-600 shadow-xs rounded-lg">DAFTAR TUGAS</button>
+                  <button id="btn-sub-memo" onclick="switchSubTab('memo')" class="flex-1 py-1.5 text-[10px] font-bold text-slate-500 rounded-lg">BUKU SAKU (MEMO)</button>
                 </div>
 
                 <!-- Konten Sub-Tab 1: Tugas Pekerjaan -->
                 <div id="sub-panel-tugas" class="sub-tab-content space-y-4">
                   <header class="flex justify-between items-center">
-                    <h4 class="font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-list-check text-blue-500"></i> Agenda Kerja</h4>
-                    <select id="agenda-filter" onchange="renderAgenda()" class="text-[9px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded p-1 font-bold outline-none"><option value="semua">Semua</option><option value="belum">Belum</option><option value="selesai">Selesai</option></select>
+                    <h4 class="font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-list-check text-blue-500"></i> Rencana Kerja</h4>
+                    <select id="agenda-filter" onchange="renderAgenda()" class="text-[9px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded p-1 font-bold outline-none"><option value="semua">Semua</option><option value="belum">Belum Selesai</option><option value="selesai">Selesai</option></select>
                   </header>
                   <div class="custom-scroll space-y-2.5" id="agenda-list-container"></div>
-                  <button onclick="openAddAgendaModal()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-2"><i class="fa-solid fa-plus-circle"></i> Tambah Tugas Baru</button>
+                  <button onclick="openAddAgendaModal()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-2"><i class="fa-solid fa-plus-circle"></i> Tambah Agenda Baru</button>
                 </div>
 
                 <!-- Konten Sub-Tab 2: Buku Saku / Memo -->
@@ -379,7 +383,7 @@
                   </header>
                   <div id="quick-notes-list" class="custom-scroll space-y-2.5"></div>
                   <button onclick="openAddMemoModal()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-plus-circle"></i> Tambah Memo Baru
+                    <i class="fa-solid fa-plus-circle"></i> Tambah Catatan Baru
                   </button>
                 </div>
               </div>
@@ -387,7 +391,7 @@
               <!-- PANEL KALENDER -->
               <div id="panel-tab-kalender" class="hidden space-y-4">
                 <header class="flex items-center justify-between">
-                  <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-calendar-check text-blue-500"></i> Kalender Kerja</span>
+                  <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-calendar-check text-blue-500"></i> Kalender Agenda</span>
                   <div class="flex items-center space-x-1">
                     <button onclick="prevMonth()" class="w-6 h-6 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-900 text-[10px] transition"><i class="fa-solid fa-chevron-left"></i></button>
                     <button onclick="nextMonth()" class="w-6 h-6 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-900 text-[10px] transition"><i class="fa-solid fa-chevron-right"></i></button>
@@ -399,30 +403,30 @@
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold" id="calendar-days-grid"></div>
                 <footer id="calendar-event-display" class="pt-3 border-t border-slate-100 dark:border-slate-700">
-                   <p class="text-[10px] text-slate-400 italic"><i class="fa-solid fa-info-circle text-blue-400"></i> Ketuk tanggal untuk jadwal.</p>
+                   <p class="text-[10px] text-slate-400 italic"><i class="fa-solid fa-info-circle text-blue-400"></i> Tekan tanggal untuk melihat agenda khusus.</p>
                 </footer>
               </div>
 
               <!-- PANEL ALAT IT -->
               <div id="panel-tab-alat" class="hidden space-y-4">
                 <div class="bg-slate-50 dark:bg-slate-900/30 p-3 rounded-2xl border border-slate-200/50 space-y-2.5">
-                   <div class="flex justify-between items-center"><h5 class="text-[11px] font-bold flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-500"></i> Broadcast WA</h5><button onclick="openTemplatesModal()" class="text-[9px] text-blue-600 hover:underline font-bold">KELOLA</button></div>
-                   <input type="text" id="wa-recipient-name" placeholder="Nama Guru" class="w-full text-[10px] p-2 rounded-xl border bg-white dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-1 focus:ring-blue-500" />
+                   <div class="flex justify-between items-center"><h5 class="text-[11px] font-bold flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-500"></i> Siaran WhatsApp</h5><button onclick="openTemplatesModal()" class="text-[9px] text-blue-600 hover:underline font-bold">KELOLA</button></div>
+                   <input type="text" id="wa-recipient-name" placeholder="Nama Penerima (Misal: Guru)" class="w-full text-[10px] p-2 rounded-xl border bg-white dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-1 focus:ring-blue-500" />
                    <select id="wa-template-select" class="w-full text-[10px] p-2 rounded-xl border bg-white dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none font-bold cursor-pointer focus:ring-1 focus:ring-blue-500"></select>
-                   <div class="flex gap-2"><button onclick="copyBroadcastMessage()" class="flex-1 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border rounded-xl text-[10px] font-bold"><i class="fa-solid fa-copy"></i> Salin</button><button onclick="sendBroadcastWhatsApp()" class="flex-1 py-1.5 bg-emerald-600 text-white rounded-xl text-[10px] font-bold"><i class="fa-brands fa-whatsapp"></i> Kirim</button></div>
+                   <div class="flex gap-2"><button onclick="copyBroadcastMessage()" class="flex-1 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border rounded-xl text-[10px] font-bold"><i class="fa-solid fa-copy"></i> Salin Teks</button><button onclick="sendBroadcastWhatsApp()" class="flex-1 py-1.5 bg-emerald-600 text-white rounded-xl text-[10px] font-bold"><i class="fa-brands fa-whatsapp"></i> Kirim</button></div>
                 </div>
                 
-                <div class="bg-slate-50 dark:bg-slate-900/30 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
-                   <h5 class="text-[11px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-key text-amber-500"></i> Password Generator</h5>
-                   <div class="flex gap-2"><input type="text" id="generated-password-input" readonly placeholder="Sandi..." onclick="copyGeneratedPassword()" class="flex-1 text-[10px] p-2 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 font-mono cursor-pointer outline-none" /><button onclick="generateSecurePassword()" class="bg-amber-500 hover:bg-amber-600 text-white text-[10px] px-3 font-bold rounded-xl transition"><i class="fa-solid fa-rotate"></i></button></div>
+                <div class="bg-slate-50 dark:bg-slate-900/30 p-3 rounded-2xl border border-slate-200/50 space-y-2.5">
+                   <h5 class="text-[11px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-key text-amber-500"></i> Pembuat Kata Sandi</h5>
+                   <div class="flex gap-2"><input type="text" id="generated-password-input" readonly placeholder="Kata sandi..." onclick="copyGeneratedPassword()" class="flex-1 text-[10px] p-2 rounded-xl border dark:bg-slate-800 dark:text-white dark:border-slate-700 font-mono cursor-pointer outline-none text-center" /><button onclick="generateSecurePassword()" class="bg-amber-500 hover:bg-amber-600 text-white text-[10px] px-3 font-bold rounded-xl transition"><i class="fa-solid fa-rotate"></i></button></div>
                 </div>
 
                 <div class="bg-blue-50/70 dark:bg-blue-950/20 p-3 rounded-2xl border border-blue-200/50 dark:border-blue-800/40 space-y-2.5">
                   <h5 class="text-[11px] font-black text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-nodes text-blue-500"></i> PWA Offline Deployment Kit
+                    <i class="fa-solid fa-circle-nodes text-blue-500"></i> Kit Deployment Luring (PWA)
                   </h5>
                   <p class="text-[9px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    Unduh konfigurasi berikut dan taruh bersama <code class="font-mono bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-blue-600">index.html</code> pada server lokal Anda agar portal dapat diakses secara luring.
+                    Unduh konfigurasi berikut dan letakkan di dalam folder root bersama file <code class="font-mono bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-blue-600">index.html</code> Anda agar portal dapat diakses tanpa koneksi internet.
                   </p>
                   <div class="grid grid-cols-2 gap-2">
                     <button onclick="downloadPwaFile('manifest')" class="py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1">
@@ -433,8 +437,8 @@
                     </button>
                   </div>
                   <div class="text-[9px] text-center pt-1 flex items-center justify-center gap-1 text-slate-400 dark:text-slate-500 font-medium">
-                    <span id="pwa-sw-status-dot" class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-pulse"></span>
-                    <span>Status Service Worker: <span id="pwa-sw-status-text" class="font-semibold">Mendeteksi...</span></span>
+                    <span id="pwa-sw-status-dot" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                    <span>Status Service Worker: <span id="pwa-sw-status-text" class="font-semibold">Mendeteksi sistem...</span></span>
                   </div>
                 </div>
               </div>
@@ -451,11 +455,11 @@
     <div id="hidden-inputs-wrapper" class="hidden">
       <!-- Input file Data JSON untuk Import -->
       <input type="file" id="import-file-input" accept=".json" onchange="importBackupData(event)"/>
-      <!-- Input file Gambar QR Code (Kamera File Scanner) -->
+      <!-- Input file Gambar QR Code -->
       <input type="file" id="qr-file-input" accept="image/*" onchange="scanQrFile(event)" />
     </div>
 
-    <!-- LOCK SCREEN OVERLAY (15 MENIT IDLE) -->
+    <!-- LOCK SCREEN OVERLAY -->
     <div id="idle-lock-screen" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center pointer-events-none opacity-0 transition-all duration-500">
       <div class="text-center p-8 max-w-sm rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-6 transform scale-95 transition-transform duration-500" id="lock-card">
         <div class="w-20 h-20 mx-auto rounded-full bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-500 animate-pulse text-3xl">
@@ -463,15 +467,15 @@
         </div>
         <div class="space-y-2">
           <h3 class="text-white font-space font-black text-lg">Sesi Kerja Terkunci</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">Portal dikunci sementara demi keamanan data karena sistem tidak mendeteksi aktivitas Anda selama beberapa waktu.</p>
+          <p class="text-xs text-slate-400 leading-relaxed">Portal dikunci sementara demi keamanan data karena tidak ada aktivitas dalam kurun waktu tertentu.</p>
         </div>
         <button onclick="unlockSession()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition duration-200 shadow-lg shadow-blue-500/20">
-          <i class="fa-solid fa-lock-open mr-1.5"></i> Buka Sesi
+          <i class="fa-solid fa-lock-open mr-1.5"></i> Buka Sesi Kembali
         </button>
       </div>
     </div>
 
-    <!-- MODAL CONFIRMATION CUSTOM (REPLACES WINDOW.CONFIRM) -->
+    <!-- MODAL CONFIRMATION CUSTOM -->
     <div id="custom-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
       <div class="bg-white dark:bg-slate-800 w-full max-w-sm mx-4 p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300">
         <div class="text-center space-y-4">
@@ -480,10 +484,10 @@
           </div>
           <div class="space-y-1">
             <h4 id="confirm-modal-title" class="font-space font-extrabold text-slate-900 dark:text-white text-base">Konfirmasi Tindakan</h4>
-            <p id="confirm-modal-message" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
+            <p id="confirm-modal-message" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Apakah Anda yakin ingin memproses tindakan ini?</p>
           </div>
           <div class="pt-4 flex items-center gap-2">
-            <button id="btn-confirm-cancel" class="flex-1 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition">Batal</button>
+            <button id="btn-confirm-cancel" class="flex-1 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition">Batalkan</button>
             <button id="btn-confirm-ok" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition">Ya, Lanjutkan</button>
           </div>
         </div>
@@ -493,23 +497,23 @@
     <!-- MODAL TAMBAH TAUTAN -->
     <div id="add-link-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
       <div class="bg-white dark:bg-slate-800 w-full max-w-md mx-4 p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300">
-        <h3 class="font-space font-bold text-slate-900 dark:text-white text-base mb-4"><i class="fa-solid fa-circle-plus text-emerald-500"></i> Tambah Tautan</h3>
+        <h3 class="font-space font-bold text-slate-900 dark:text-white text-base mb-4"><i class="fa-solid fa-circle-plus text-emerald-500"></i> Tambah Tautan Kustom</h3>
         <div class="space-y-4">
-          <input type="text" id="new-link-title" placeholder="Nama Tautan" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500" />
-          <input type="url" id="new-link-url" placeholder="https://..." class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500" />
-          <textarea id="new-link-desc" rows="2" placeholder="Deskripsi Singkat" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          <input type="text" id="new-link-title" placeholder="Nama Tautan Situs" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="url" id="new-link-url" placeholder="Format URL: https://..." class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500" />
+          <textarea id="new-link-desc" rows="2" placeholder="Deskripsi Singkat Layanan" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
           <div class="grid grid-cols-2 gap-3">
             <select id="new-link-category" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none font-bold focus:ring-2 focus:ring-blue-500">
               <option value="utama">Dapodik Utama</option><option value="verval">Sistem Verval</option><option value="keuangan">Keuangan</option><option value="guru">Layanan GTK</option><option value="kepegawaian">ASN</option><option value="daerah">Portal Daerah</option>
             </select>
             <select id="new-link-icon" class="w-full text-sm p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none font-bold focus:ring-2 focus:ring-blue-500">
-              <option value="fa-globe">Globe</option><option value="fa-database">Database</option><option value="fa-id-card">Kartu</option><option value="fa-computer">Komputer</option><option value="fa-wallet">Dompet</option>
+              <option value="fa-globe">Globe</option><option value="fa-database">Database</option><option value="fa-id-card">Kartu Identitas</option><option value="fa-computer">Komputer</option><option value="fa-wallet">Dompet</option>
             </select>
           </div>
         </div>
         <div class="mt-6 flex justify-end gap-2.5">
-          <button onclick="closeAddLinkModal()" class="px-4 py-2 text-xs font-bold text-slate-500">Batal</button>
-          <button onclick="saveCustomLinkLocal()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition">Simpan</button>
+          <button onclick="closeAddLinkModal()" class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 transition">Batal</button>
+          <button onclick="saveCustomLinkLocal()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition">Simpan Tautan</button>
         </div>
       </div>
     </div>
@@ -518,10 +522,10 @@
     <div id="add-agenda-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
       <div class="bg-white dark:bg-slate-800 w-full max-w-md mx-4 p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300">
         <h3 class="font-space font-bold text-slate-900 dark:text-white text-base mb-4"><i class="fa-solid fa-list-check text-blue-500"></i> Buat Agenda Baru</h3>
-        <textarea id="agenda-input-text" rows="4" placeholder="Tuliskan tugas yang harus Bapak selesaikan..." class="w-full text-sm p-4 rounded-2xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+        <textarea id="agenda-input-text" rows="4" placeholder="Tuliskan tugas yang harus segera diselesaikan..." class="w-full text-sm p-4 rounded-2xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
         <div class="mt-6 flex justify-end gap-2.5">
-          <button onclick="closeAddAgendaModal()" class="px-4 py-2 text-xs font-bold text-slate-500">Batal</button>
-          <button onclick="addAgendaItem()" class="px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black transition">SIMPAN TUGAS</button>
+          <button onclick="closeAddAgendaModal()" class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 transition">Batal</button>
+          <button onclick="addAgendaItem()" class="px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black transition">Simpan Agenda</button>
         </div>
       </div>
     </div>
@@ -541,7 +545,7 @@
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Judul Catatan</label>
-              <input type="text" id="note-title-input" placeholder="Judul..." class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-1 focus:ring-blue-500 outline-none" />
+              <input type="text" id="note-title-input" placeholder="Judul memo..." class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-1 focus:ring-blue-500 outline-none" />
             </div>
             <div>
               <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Tanggal (Opsional)</label>
@@ -549,12 +553,12 @@
             </div>
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Isi Memo / Catatan</label>
-            <textarea id="note-body-input" rows="4" placeholder="Tulis catatan penting di sini..." class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-1 focus:ring-blue-500 outline-none"></textarea>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1.5">Isi Catatan / Memo</label>
+            <textarea id="note-body-input" rows="4" placeholder="Tuliskan catatan penting di sini..." class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 focus:ring-1 focus:ring-blue-500 outline-none"></textarea>
           </div>
         </div>
         <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
-          <button onclick="closeAddMemoModal()" class="px-4 py-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700 text-xs font-bold text-slate-500">Batal</button>
+          <button onclick="closeAddMemoModal()" class="px-4 py-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700 text-xs font-bold text-slate-500 hover:text-slate-750 transition">Batal</button>
           <button onclick="addQuickNote()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-lg shadow-blue-500/10">Simpan Memo</button>
         </div>
       </div>
@@ -564,8 +568,8 @@
     <div id="templates-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
       <div class="bg-white dark:bg-slate-800 w-full max-w-lg mx-4 p-5 sm:p-6 rounded-3xl border shadow-2xl relative transform scale-95 transition-all duration-300 max-h-[90vh] overflow-y-auto font-sans">
         <div class="flex justify-between items-center mb-4 border-b pb-4">
-          <h3 class="font-space font-bold text-slate-900 dark:text-white text-base flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-500 text-xl"></i> Template WA</h3>
-          <button onclick="closeTemplatesModal()" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
+          <h3 class="font-space font-bold text-slate-900 dark:text-white text-base flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-500 text-xl"></i> Kelola Template WhatsApp</h3>
+          <button onclick="closeTemplatesModal()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
         <div id="templates-list-view" class="space-y-4 font-sans">
           <div id="templates-list-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1"></div>
@@ -573,9 +577,9 @@
         </div>
         <div id="template-form-view" class="hidden space-y-4">
           <input type="hidden" id="template-edit-id" />
-          <input type="text" id="template-name-input" placeholder="Judul Template" class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none" />
-          <textarea id="template-text-input" rows="5" placeholder="Pesan... gunakan {nama}" class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none"></textarea>
-          <div class="flex justify-end gap-2"><button onclick="hideTemplateForm()" class="px-4 py-2 text-xs font-bold text-slate-500">Batal</button><button onclick="saveTemplate()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition">Simpan</button></div>
+          <input type="text" id="template-name-input" placeholder="Judul/Label Template" class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none" />
+          <textarea id="template-text-input" rows="5" placeholder="Tulis pesan... gunakan variabel {nama} untuk menyebut penerima secara otomatis." class="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 dark:text-white dark:border-slate-700 outline-none"></textarea>
+          <div class="flex justify-end gap-2"><button onclick="hideTemplateForm()" class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 transition">Batal</button><button onclick="saveTemplate()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition">Simpan</button></div>
         </div>
         <div class="mt-6 flex justify-end"><button onclick="closeTemplatesModal()" class="px-5 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-xs font-bold hover:bg-slate-200 transition">Tutup</button></div>
       </div>
@@ -584,7 +588,7 @@
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-4 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 bg-slate-900/95 dark:bg-white text-white dark:text-slate-900 text-xs py-3.5 px-5 rounded-xl shadow-xl border border-slate-800 dark:border-slate-100 font-sans">
       <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600 text-base"></i>
-      <span id="toast-message" class="font-bold">Pesan notifikasi</span>
+      <span id="toast-message" class="font-bold">Notifikasi sistem</span>
     </div>
 
     <script>
@@ -592,50 +596,32 @@
       // 0. ANTI-INSPECT & DEVTOOLS BLOCKER
       // ==========================================
       (function() {
-        // Blokir Klik Kanan
+        // Blokir Klik Kanan (Senyap)
         document.addEventListener('contextmenu', function(e) {
           e.preventDefault();
-          if (typeof showToast === 'function') {
-            showToast("⚠️ Klik kanan dinonaktifkan untuk perlindungan data!", "warning");
-          }
         });
 
-        // Blokir Shortcut Keyboard untuk Inspeksi
+        // Blokir Shortcut Keyboard untuk Inspeksi (Senyap)
         document.addEventListener('keydown', function(e) {
-          // F12 (123)
-          if (e.keyCode === 123 || e.key === 'F12') {
+          const forbiddenKeys = [
+            123, // F12
+            73,  // I
+            74,  // J
+            67,  // C
+            85,  // U
+            83   // S
+          ];
+          
+          const isCommand = e.ctrlKey || e.metaKey;
+          const isShift = e.shiftKey;
+
+          if (
+            forbiddenKeys.includes(e.keyCode) || 
+            (isCommand && isShift && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+            (isCommand && e.keyCode === 85) || // Ctrl+U (View Source)
+            (isCommand && e.keyCode === 83)    // Ctrl+S (Save)
+          ) {
             e.preventDefault();
-            if (typeof showToast === 'function') showToast("⚠️ Akses DevTools dilarang!", "error");
-            return false;
-          }
-          // Ctrl+Shift+I / Cmd+Opt+I (Inspect)
-          if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) {
-            e.preventDefault();
-            if (typeof showToast === 'function') showToast("⚠️ Inspeksi kode dilarang!", "error");
-            return false;
-          }
-          // Ctrl+Shift+J / Cmd+Opt+J (Console)
-          if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) {
-            e.preventDefault();
-            if (typeof showToast === 'function') showToast("⚠️ Akses konsol dinonaktifkan!", "error");
-            return false;
-          }
-          // Ctrl+Shift+C / Cmd+Opt+C (Element Selector)
-          if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 67 || e.key === 'C' || e.key === 'c')) {
-            e.preventDefault();
-            if (typeof showToast === 'function') showToast("⚠️ Inspeksi elemen dilarang!", "error");
-            return false;
-          }
-          // Ctrl+U (View Source)
-          if ((e.ctrlKey || e.metaKey) && (e.keyCode === 85 || e.key === 'U' || e.key === 'u')) {
-            e.preventDefault();
-            if (typeof showToast === 'function') showToast("⚠️ Dilarang melihat kode sumber halaman!", "error");
-            return false;
-          }
-          // Ctrl+S (Save Page)
-          if ((e.ctrlKey || e.metaKey) && (e.keyCode === 83 || e.key === 'S' || e.key === 's')) {
-            e.preventDefault();
-            if (typeof showToast === 'function') showToast("⚠️ Penyimpanan lokal halaman dinonaktifkan!", "warning");
             return false;
           }
         });
@@ -646,50 +632,49 @@
             const start = new Date();
             debugger; // Akan menahan eksekusi jika konsol DevTools terbuka
             const end = new Date();
-            if (end - start > 100) {
-              // Jika terdeteksi jeda lama (DevTools terbuka), kunci/reset tampilan
+            if (end - start > 150) { // Toleransi waktu disesuaikan untuk kestabilan perangkat
+              // Jika terdeteksi jeda lama (DevTools terbuka), kunci/reset tampilan dengan bahasa yang sangat profesional
               document.body.innerHTML = `
                 <div class="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white font-space text-center p-6 space-y-4">
                   <div class="w-20 h-20 rounded-full bg-rose-500/20 border border-rose-500 text-rose-500 flex items-center justify-center text-3xl animate-pulse">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                   </div>
-                  <h1 class="text-xl sm:text-2xl font-black">Akses Ilegal Terdeteksi</h1>
+                  <h1 class="text-xl sm:text-2xl font-black">Akses DevTools Dibatasi</h1>
                   <p class="text-xs sm:text-sm text-slate-400 max-w-md leading-relaxed">
-                    Sistem mendeteksi adanya upaya inspeksi kode (DevTools dibuka). Sesi dimatikan demi keamanan token 2FA & kredensial sekolah. Harap segarkan kembali halaman tanpa membuka DevTools.
+                    Sistem mendeteksi adanya aktivitas analisis kode (DevTools aktif). Akses dinonaktifkan demi melindungi integritas data token 2FA serta kredensial sekolah. Harap muat ulang halaman tanpa membuka menu inspeksi.
                   </p>
-                  <button onclick="window.location.reload()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-xl text-xs font-bold transition">Segarkan Halaman</button>
+                  <button onclick="window.location.reload()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-xl text-xs font-bold transition">Muat Ulang Halaman</button>
                 </div>
               `;
             }
           })();
         }, 1000);
+
+        // Deteksi Perubahan Ukuran Window (Docking DevTools)
+        window.addEventListener('resize', () => {
+          if ((window.outerHeight - window.innerHeight) > 200 || (window.outerWidth - window.innerWidth) > 200) {
+             console.clear();
+             console.log("%cBerhenti! Area ini hanya untuk pengembang terverifikasi.", "color: red; font-size: 24px; font-weight: bold;");
+          }
+        });
       })();
 
       // ==========================================
-      // 1. GLOBAL CONFIGURATION (Edit di satu tempat ini)
+      // 1. GLOBAL CONFIGURATION
       // ==========================================
       const CONFIG = {
-        // Identitas Instansi Sekolah & Operator
         SCHOOL_NAME_LONG: "UPT SPF SMP Negeri 7 Makassar",
         SCHOOL_NAME_SHORT: "SMP Negeri 7 Makassar",
         SCHOOL_CODE_ABBR: "SPENSEV", 
         NPSN: "40312922",
         OPERATOR_NAME: "SUARMIN S",
-
-        // Integrasi URL E-Rapor
         RAPOR_URL: "https://rapor.smpn7makassar.sch.id",
-
-        // Target Cut-Off & Alarm Penarikan BOS
-        CUTOFF_DATE: "Aug 31, 2026 23:59:59",
+        CUTOFF_DATE: "August 31, 2026 23:59:59",
         CUTOFF_TITLE: "Cut-Off BOS Reguler 2026",
-        CUTOFF_DESC: "Batas akhir penarikan data siswa untuk dana BOS sekolah.",
+        CUTOFF_DESC: "Batas waktu finalisasi dan penarikan data siswa untuk perhitungan dana BOS.",
         CUTOFF_FOOTER_TEXT: "Target: 31 Agustus 2026",
-
-        // Enkripsi & Storage Adapters
         SECURE_PASS_KEY: "dapohub-secure-universal-key-2026",
-        STORAGE_PREFIX: "dapohub-", // Semua key LocalStorage memakai prefix universal ini
-
-        // Batas Penguncian Otomatis (Idle Lock)
+        STORAGE_PREFIX: "dapohub-",
         IDLE_LIMIT_MINUTES: 15
       };
 
@@ -743,59 +728,59 @@
       // 3. SEED DATA AWAL (PORTAL TAUTAN)
       // ==========================================
       const defaultSeedLinks = [
-        { id: "seed-local-dapo", title: "Aplikasi Dapodik Lokal", url: "http://localhost:5774", desc: "Akses cepat langsung menuju sistem Aplikasi Dapodik yang terpasang di komputer ini (Port 5774).", category: "utama", icon: "fa-laptop", system: true },
-        { id: "seed-1", title: "Beranda Dapodik", url: "https://dapo.kemendikdasmen.go.id", desc: "Pusat rilis pembaruan installer, patch aplikasi, surat edaran resmi, dan panduan Dapodik.", category: "utama", icon: "fa-globe", system: true },
-        { id: "seed-2", title: "SP Datadik Satuan Pendidikan", url: "https://sp.datadik.kemendikdasmen.go.id/", desc: "Kelola data kelembagaan, registrasi akun PTK, verifikasi akun lembaga, and unduh Prefill.", category: "utama", icon: "fa-school-flag", system: true },
-        { id: "seed-3", title: "PTK Datadik", url: "https://ptk.datadik.kemendikdasmen.go.id", desc: "Layanan autentikasi PTK mandiri untuk perbaikan riwayat pendidikan formal and riwayat kerja.", category: "utama", icon: "fa-id-card", system: true },
-        { id: "seed-4", title: "Unduh Prefill Dapodik", url: "https://prefill2.kemendikdasmen.go.id/", desc: "Unduh data prefill nasional untuk melakukan registrasi awal aplikasi Dapodik versi lokal.", category: "utama", icon: "fa-database", system: true },
-        { id: "seed-5", title: "Unduhan Aplikasi Dapodik", url: "https://dapo.kemendikdasmen.go.id/unduhan", desc: "Halaman resmi pusat unduhan Installer aplikasi, Patch, berkas panduan, dan formulir Dapodik.", category: "utama", icon: "fa-database", system: true },
-        { id: "seed-6", title: "E-Rapor SMP", url: CONFIG.RAPOR_URL, desc: "Akses portal manajemen aplikasi E-Rapor terintegrasi untuk SMP dari direktorat SMP.", category: "utama", icon: "fa-school-flag", system: true },
-        { id: "seed-7", title: "Rapor Pendidikan Kemendikdasmen", url: "https://raporpendidikan.kemendikdasmen.go.id", desc: "Platform evaluasi mutu sistem pendidikan Indonesia. Mengukur capaian kualitas mutu pembelajaran.", category: "utama", icon: "fa-globe", system: true },
-        { id: "seed-lomba", title: "Pendaftaran Lomba (BPTI/Puspresnas)", url: "https://daftar-bpti.kemendikdasmen.go.id", desc: "Portal pendaftaran resmi ajang talenta, kompetisi sains (OSN), seni (FLS2N), dan olahraga (O2SN) siswa.", category: "utama", icon: "fa-trophy", system: true },
-        { id: "seed-digi-ditsmp", title: "DIGI-DitSMP Kemendikdasmen", url: "https://digi-ditsmp.kemendikdasmen.go.id/", desc: "Portal digital pembelajaran digital SMP untuk efektivitas layanan dan pendampingan mutu.", category: "utama", icon: "fa-laptop", system: true },
-        { id: "seed-jdih", title: "JDIH Kemendikdasmen", url: "https://jdih.kemendikdasmen.go.id/", desc: "Jaringan Dokumentasi dan Informasi Hukum Kemendikdasmen untuk melacak hukum/surat edaran dinas.", category: "utama", icon: "fa-gavel", system: true },
-        { id: "seed-kurikulum", title: "Pusat Kurikulum Kemendikdasmen", url: "https://kurikulum.kemendikdasmen.go.id/", desc: "Layanan informasi regulasi Kurikulum Merdeka, panduan proyek profil Pancasila, dan kurikulum nasional.", category: "utama", icon: "fa-book-open", system: true },
-        { id: "seed-8", title: "Cek NISN Mandiri", url: "https://nisn.data.kemendikdasmen.go.id", desc: "Pencarian mandiri Nomor Induk Siswa Nasional untuk validasi keaktifan identitas siswa.", category: "verval", icon: "fa-id-card", system: true },
-        { id: "seed-9", title: "Cek NUPTK GTK", url: "https://gtk.data.kemendikdasmen.go.id/", desc: "Pencarian publik status and nomor keaktifan NUPTK Pendidik dan Tenaga Kependidikan.", category: "verval", icon: "fa-id-card", system: true },
-        { id: "seed-ijazah", title: "Manajemen / Verval Ijazah (SIVIL)", url: "https://ijazah.data.kemendikdasmen.go.id/manajemen/#/sign-in", desc: "Sistem verifikasi ijazah elektronik Kemendikdasmen untuk memvalidasi kelulusan siswa dan status ijazah secara sah.", category: "verval", icon: "fa-graduation-cap", system: true },
-        { id: "seed-10", title: "Verval PTK", url: "https://vervalptk.data.kemendikdasmen.go.id/site/login", desc: "Verifikasi validitas NIK PTK, penerbitan NUPTK baru, and perbaikan identitas guru.", category: "verval", icon: "fa-id-card", system: true },
-        { id: "seed-11", title: "Verval PD (Peserta Didik)", url: "https://vervalpd.data.kemendikdasmen.go.id/", desc: "Penerbitan & perbaikan NISN, pengesahan NIK siswa terintegrasi langsung dengan database Dukcapil.", category: "verval", icon: "fa-id-card", system: true },
-        { id: "seed-12", title: "Verval SP (Satuan Pendidikan)", url: "https://vervalsp.data.kemendikdasmen.go.id/verval/index.php/cberanda/index/", desc: "Pengelolaan profil and spasial koordinat wilayah Satuan Pendidikan Anda.", category: "verval", icon: "fa-globe", system: true },
-        { id: "seed-13", title: "Verval TIK", url: "https://vervaltio.data.kemendikdasmen.go.id", desc: "Verifikasi sarana komputer, proktor, jaringan internet, and daya tampung kesiapan ujian ANBK.", category: "verval", icon: "fa-computer", system: true },
-        { id: "seed-14", title: "Pusdatin PD (Pusat Data Peserta Didik)", url: "https://sdm.data.kemendikdasmen.go.id/", desc: "Akses sinkronisasi residu data kependudukan peserta didik, perbaikan tingkat ganda, dan kelulusan.", category: "verval", icon: "fa-id-card", system: true },
-        { id: "seed-15", title: "Sipintar PIP (Program Indonesia Pintar)", url: "https://pip.kemendikdasmen.go.id/home_v1", desc: "Pemantauan penyaluran beasiswa PIP, pengajuan usulan baru, and unduh SK NOMINASI/pemberian.", category: "keuangan", icon: "fa-wallet", system: true },
-        { id: "seed-16", title: "ARKAS Kemendikdasmen", url: "https://arkas.kemendikdasmen.go.id", desc: "Aplikasi Rencana Kegiatan and Anggaran Sekolah untuk penyusunan dan pelaporan dana BOSP.", category: "keuangan", icon: "fa-wallet", system: true },
-        { id: "seed-17", title: "SIPLah", url: "https://siplah.blibli.com/", desc: "Sistem Informasi Pengadaan Sekolah untuk pembelanjaan barang and jasa dana BOSP.", category: "keuangan", icon: "fa-cart-shopping", system: true },
-        { id: "seed-18", title: "BOSP Salur", url: "https://bosp.kemendikdasmen.go.id", desc: "Pemantauan penyaluran dan konfirmasi laporan penggunaan dana BOSP Reguler & Kinerja.", category: "keuangan", icon: "fa-wallet", system: true },
-        { id: "seed-coretax", title: "Coretax DJP Pajak", url: "https://coretaxdjp.pajak.go.id/identityproviderportal/Account/Login", desc: "Portal terintegrasi sistem administrasi perpajakan masa depan DJP (Coretax System) bagi wajib pajak.", category: "keuangan", icon: "fa-receipt", system: true },
-        { id: "seed-19", title: "Info GTK", url: "https://info.gtk.kemendikdasmen.go.id/", desc: "Pengecekan keaktifan mengajar mandiri, validitas data beban mengajar (JJM), and keaktifan sertifikasi SKTP.", category: "guru", icon: "fa-chalkboard-user", system: true },
-        { id: "seed-20", title: "SIMPKB Login", url: "https://paspor-gtk.simpkb.id/casgpo/login?service=https%3A%2F%2Fapp.simpkb.id%2Fauth%2Flogin", desc: "Sistem Informasi Manajemen Pengembangan Keprofesian Berkelanjutan (PPG, Diklat, & KKG/MGMP).", category: "guru", icon: "fa-chalkboard-user", system: true },
-        { id: "seed-21", title: "Ruang GTK", url: "https://akun.pendidikan.go.id/login?flow=fa87d033-975e-48c1-8315-b75b0be1dfb2", desc: "Layanan bagi guru untuk pelatihan mandiri, pengisian e-Kinerja (SKP), and penyusunan modul ajar.", category: "guru", icon: "fa-chalkboard-user", system: true },
-        { id: "seed-22", title: "Akun Belajar.id", url: "https://belajar.id", desc: "Aktivasi, reset kata sandi, dan sinkronisasi akun Google pembelajaran guru & siswa.", category: "guru", icon: "fa-chalkboard-user", system: true },
-        { id: "seed-23", title: "Rumah Belajar", url: "https://rumah.pendidikan.go.id/", desc: "Portal media pembelajaran internet gratis yang menyajikan bahan belajar lengkap dari Kemendikbud.", category: "guru", icon: "fa-school-flag", system: true },
-        { id: "seed-kbbi", title: "KBBI Daring Kemendikdasmen", url: "https://kbbi.kemendikdasmen.go.id/", desc: "Kamus Besar Bahasa Indonesia (KBBI) elektronik resmi Pusat Pembinaan dan Pengembangan Bahasa.", category: "guru", icon: "fa-spell-check", system: true },
-        { id: "seed-myasn", title: "MyASN BKN", url: "https://myasn.bkn.go.id", desc: "Portal utama satu pintu layanan kepegawaian mandiri ASN nasional dari Badan Kepegawaian Negara.", category: "kepegawaian", icon: "fa-id-card", system: true },
-        { id: "seed-ekinerja", title: "e-Kinerja BKN", url: "https://kinerja.bkn.go.id", desc: "Sistem pengelolaan kinerja pegawai ASN terintegrasi untuk penyusunan and penilaian Sasaran Kinerja Pegawai (SKP).", category: "kepegawaian", icon: "fa-chalkboard-user", system: true },
-        { id: "seed-sipp", title: "SIPP Makassar (SIM Kepegawaian)", url: "https://sipp.makassar.go.id", desc: "Sistem Informasi Pelayanan Personil BKPSDMD Kota Makassar untuk pencatatan berkas fisik and administrasi ASN.", category: "kepegawaian", icon: "fa-city", system: true },
-        { id: "seed-esakti", title: "e-Sakti Makassar (Presensi & TPP)", url: "https://esakti.makassar.go.id", desc: "Layanan mandiri presensi ASN daerah Makassar, pemantauan kedisiplinan kerja, dan realisasi TPP harian.", category: "kepegawaian", icon: "fa-network-wired", system: true },
-        { id: "seed-simpeg", title: "SIMPEG Kemendikdasmen", url: "https://simpeg.bkpsdmd.makassarkota.go.id/", desc: "Sistem Informasi Manajemen Kepegawaian internal Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi.", category: "kepegawaian", icon: "fa-id-card", system: true },
-        { id: "seed-24", title: "Portal Web ANBK", url: "https://anbk.kemendikdasmen.go.id", desc: "Penetapan status pelaksanaan, data proktor, komputer client, penjadwalan, dan cetak kartu login.", category: "ujian", icon: "fa-computer", system: true },
-        { id: "seed-25", title: "Bio-AN SMP", url: "https://bioansmp.kemendikdasmen.go.id", desc: "Sistem penarikan data calon peserta Asesmen Nasional (DNT) dari pangkalan Dapodik secara terintegrasi.", category: "ujian", icon: "fa-id-card", system: true },
-        { id: "seed-26", title: "Portal TKA & Asesmen Bakat", url: "https://tka.kemendikdasmen.go.id/", desc: "Pusat Asesmen Pendidikan untuk pelaksanaan Tes Kemampuan Akademik (TKA) dan simulasi ujian siswa.", category: "ujian", icon: "fa-computer", system: true },
-        { id: "seed-27", title: "Dinas Pendidikan Makassar", url: "https://disdik.makassarkota.go.id", desc: "Situs web utama Disdik Kota Makassar. Menyediakan informasi mutasi siswa, regulasi, dan kebijakan daerah.", category: "daerah", icon: "fa-city", system: true },
-        { id: "seed-28", title: "Portal PPDB Makassar", url: "https://spmb.makassarkota.go.id/cloginsekolahx", desc: "Penerimaan Peserta Didik Baru wilayah SMP Negeri Kota Makassar (Jalur Zonasi, Afirmasi, Prestasi).", category: "daerah", icon: "fa-city", system: true },
-        { id: "seed-29", title: "Uji Kecepatan Koneksi", url: "https://speedtest.net", desc: "Uji kehandalan latensi internet Lab Komputer sebelum melakukan sinkronisasi massal.", category: "daerah", icon: "fa-network-wired", system: true },
-        { id: "seed-mbg", title: "Makan Bergizi Gratis (MBG) Portal", url: "https://mbg.pdm.kemendikdasmen.go.id/portal", desc: "Portal integrasi dan pendataan nasional implementasi program Makan Bergizi Gratis di sekolah.", category: "daerah", icon: "fa-utensils", system: true }
+        { id: "seed-local-dapo", title: "Aplikasi Dapodik Lokal", url: "http://localhost:5774", desc: "Akses cepat menuju sistem Aplikasi Dapodik yang terpasang di komputer lokal ini (Port 5774).", category: "utama", icon: "fa-laptop", system: true },
+        { id: "seed-1", title: "Beranda Dapodik", url: "https://dapo.kemendikdasmen.go.id", desc: "Situs informasi resmi pusat rilis pembaruan installer, patch aplikasi, surat edaran resmi, dan panduan teknis Dapodik.", category: "utama", icon: "fa-globe", system: true },
+        { id: "seed-2", title: "SP Datadik Satuan Pendidikan", url: "https://sp.datadik.kemendikdasmen.go.id/", desc: "Manajemen data kelembagaan, registrasi akun PTK, verifikasi akun lembaga, dan pengunduhan file prefill.", category: "utama", icon: "fa-school-flag", system: true },
+        { id: "seed-3", title: "PTK Datadik", url: "https://ptk.datadik.kemendikdasmen.go.id", desc: "Layanan verifikasi dan sinkronisasi mandiri riwayat pendidikan formal serta biodata masing-masing pendidik.", category: "utama", icon: "fa-id-card", system: true },
+        { id: "seed-4", title: "Unduh Prefill Dapodik", url: "https://prefill2.kemendikdasmen.go.id/", desc: "Unduh database prefill nasional untuk kebutuhan registrasi awal atau backup data aplikasi Dapodik.", category: "utama", icon: "fa-database", system: true },
+        { id: "seed-5", title: "Unduhan Aplikasi Dapodik", url: "https://dapo.kemendikdasmen.go.id/unduhan", desc: "Pusat rilis unduhan berkas installer, pembaruan patch, buku panduan, serta formulir fisik instrumen.", category: "utama", icon: "fa-database", system: true },
+        { id: "seed-6", title: "E-Rapor SMP", url: CONFIG.RAPOR_URL, desc: "Akses cepat portal aplikasi E-Rapor terintegrasi milik UPT SPF SMP Negeri 7 Makassar.", category: "utama", icon: "fa-school-flag", system: true },
+        { id: "seed-7", title: "Rapor Pendidikan Kemendikdasmen", url: "https://raporpendidikan.kemendikdasmen.go.id", desc: "Platform evaluasi berkala untuk melacak capaian mutu sekolah dan perencanaan berbasis data.", category: "utama", icon: "fa-globe", system: true },
+        { id: "seed-lomba", title: "Portal Ajang Talenta (BPTI/Puspresnas)", url: "https://daftar-bpti.kemendikdasmen.go.id", desc: "Pendaftaran resmi ajang kompetisi, festival seni (FLS2N), olahraga (O2SN), dan sains (OSN) siswa tingkat nasional.", category: "utama", icon: "fa-trophy", system: true },
+        { id: "seed-digi-ditsmp", title: "DIGI-DitSMP Kemendikdasmen", url: "https://digi-ditsmp.kemendikdasmen.go.id/", desc: "Pusat informasi dan media pembelajaran digital jenjang Sekolah Menengah Pertama dari Direktorat SMP.", category: "utama", icon: "fa-laptop", system: true },
+        { id: "seed-jdih", title: "JDIH Kemendikdasmen", url: "https://jdih.kemendikdasmen.go.id/", desc: "Sistem pelacak regulasi, undang-undang, peraturan menteri, serta keputusan hukum dinas terkait pendidikan.", category: "utama", icon: "fa-gavel", system: true },
+        { id: "seed-kurikulum", title: "Pusat Kurikulum Kemendikdasmen", url: "https://kurikulum.kemendikdasmen.go.id/", desc: "Pusat informasi kurikulum nasional, panduan proyek penguatan profil Pancasila, dan modul ajar resmi.", category: "utama", icon: "fa-book-open", system: true },
+        { id: "seed-8", title: "Pencarian NISN Mandiri", url: "https://nisn.data.kemendikdasmen.go.id", desc: "Validasi keaktifan Nomor Induk Siswa Nasional dan identitas kepesertaan didik secara publik.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-9", title: "Pencarian NUPTK GTK", url: "https://gtk.data.kemendikdasmen.go.id/", desc: "Verifikasi database status keaktifan Nomor Unik Pendidik dan Tenaga Kependidikan.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-ijazah", title: "Manajemen / Verval Ijazah (SIVIL)", url: "https://ijazah.data.kemendikdasmen.go.id/manajemen/#/sign-in", desc: "Sistem verifikasi ijazah elektronik nasional untuk memvalidasi legalitas kelulusan dan kepemilikan ijazah.", category: "verval", icon: "fa-graduation-cap", system: true },
+        { id: "seed-10", title: "Verval PTK", url: "https://vervalptk.data.kemendikdasmen.go.id/site/login", desc: "Layanan pengajuan penerbitan NUPTK baru, sinkronisasi NIK guru ke Dukcapil, dan koreksi identitas PTK.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-11", title: "Verval PD (Peserta Didik)", url: "https://vervalpd.data.kemendikdasmen.go.id/", desc: "Manajemen penerbitan NISN baru, perbaikan biodata dasar siswa, serta pemetaan koordinat domisili.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-12", title: "Verval SP (Satuan Pendidikan)", url: "https://vervalsp.data.kemendikdasmen.go.id/verval/index.php/cberanda/index/", desc: "Pengelolaan koordinat spasial sekolah, perizinan lembaga, serta profil umum instansi.", category: "verval", icon: "fa-globe", system: true },
+        { id: "seed-13", title: "Verval TIK", url: "https://vervaltio.data.kemendikdasmen.go.id", desc: "Laporan kesiapan sarana komputer, status jaringan Lab, dan penetapan model ujian ANBK sekolah.", category: "verval", icon: "fa-computer", system: true },
+        { id: "seed-14", title: "Manajemen sdm.data (Pusdatin)", url: "https://sdm.data.kemendikdasmen.go.id/", desc: "Pendaftaran akun operator baru, verifikasi status penugasan instansi, serta rekonsiliasi data.", category: "verval", icon: "fa-id-card", system: true },
+        { id: "seed-15", title: "Sipintar PIP (Program Indonesia Pintar)", url: "https://pip.kemendikdasmen.go.id/home_v1", desc: "Monitoring penyaluran dana beasiswa PIP siswa, konfirmasi pencairan, serta pengajuan usulan baru.", category: "keuangan", icon: "fa-wallet", system: true },
+        { id: "seed-16", title: "ARKAS Kemendikdasmen", url: "https://arkas.kemendikdasmen.go.id", desc: "Sistem Rencana Kegiatan dan Anggaran Sekolah untuk penyusunan rencana belanja and realisasi dana BOSP.", category: "keuangan", icon: "fa-wallet", system: true },
+        { id: "seed-17", title: "SIPLah", url: "https://siplah.blibli.com/", desc: "Platform resmi belanja barang dan jasa sekolah yang bersumber dari anggaran dana BOSP.", category: "keuangan", icon: "fa-cart-shopping", system: true },
+        { id: "seed-18", title: "BOSP Salur", url: "https://bosp.kemendikdasmen.go.id", desc: "Konfirmasi penerimaan penyaluran, laporan pertanggungjawaban tahap berjalan, and monitoring audit keuangan.", category: "keuangan", icon: "fa-wallet", system: true },
+        { id: "seed-coretax", title: "Coretax DJP Pajak", url: "https://coretaxdjp.pajak.go.id/identityproviderportal/Account/Login", desc: "Akses administrasi dan pelaporan pajak lembaga terpadu generasi terbaru dari Direktorat Jenderal Pajak.", category: "keuangan", icon: "fa-receipt", system: true },
+        { id: "seed-19", title: "Info GTK", url: "https://info.gtk.kemendikdasmen.go.id/", desc: "Verifikasi tunjangan profesi, status kelayakan beban mengajar (JJM), and validitas administrasi sertifikasi.", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-20", title: "Paspor GTK SIMPKB", url: "https://paspor-gtk.simpkb.id/casgpo/login?service=https%3A%2F%2Fapp.simpkb.id%2Fauth%2Flogin", desc: "Pusat integrasi akses diklat, kegiatan KKG/MGMP, program Guru Penggerak, and PPG.", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-21", title: "Platform Merdeka Mengajar (PMM)", url: "https://akun.pendidikan.go.id/login?flow=fa87d033-975e-48c1-8315-b75b0be1dfb2", desc: "Layanan pelatihan mandiri guru, pembuatan aksi nyata, and pengisian modul Sasaran Kinerja Pegawai (e-Kinerja).", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-22", title: "Pusat Akun Belajar.id", url: "https://belajar.id", desc: "Layanan aktivasi, pemulihan, dan reset kata sandi akun Google Workspace for Education untuk guru dan siswa.", category: "guru", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-23", title: "Rumah Belajar Kemendikbud", url: "https://rumah.pendidikan.go.id/", desc: "Pusat penyedia materi audio-visual, bank soal, dan laboratorium virtual gratis untuk kegiatan belajar.", category: "guru", icon: "fa-school-flag", system: true },
+        { id: "seed-kbbi", title: "KBBI Daring", url: "https://kbbi.kemendikdasmen.go.id/", desc: "Kamus Besar Bahasa Indonesia elektronik resmi untuk rujukan ejaan kata and istilah laporan baku.", category: "guru", icon: "fa-spell-check", system: true },
+        { id: "seed-myasn", title: "MyASN BKN", url: "https://myasn.bkn.go.id", desc: "Satu layanan kepegawaian terpadu untuk pencatatan dan penelusuran riwayat kepangkatan ASN nasional.", category: "kepegawaian", icon: "fa-id-card", system: true },
+        { id: "seed-ekinerja", title: "e-Kinerja BKN", url: "https://kinerja.bkn.go.id", desc: "Sistem penilaian Sasaran Kinerja Pegawai (SKP) Aparatur Sipil Negara secara berkala and terintegrasi.", category: "kepegawaian", icon: "fa-chalkboard-user", system: true },
+        { id: "seed-sipp", title: "SIPP BKPSDMD Makassar", url: "https://sipp.makassar.go.id", desc: "Aplikasi pengelolaan berkas fisik dan administrasi mandiri ASN tingkat Pemerintah Kota Makassar.", category: "kepegawaian", icon: "fa-city", system: true },
+        { id: "seed-esakti", title: "e-Sakti Makassar (Presensi &amp; TPP)", url: "https://esakti.makassar.go.id", desc: "Sistem rekonsiliasi presensi kehadiran pegawai Pemerintah Kota Makassar untuk dasar pembayaran TPP.", category: "kepegawaian", icon: "fa-network-wired", system: true },
+        { id: "seed-simpeg", title: "SIMPEG BKPSDMD", url: "https://simpeg.bkpsdmd.makassarkota.go.id/", desc: "Portal Manajemen Informasi Kepegawaian internal Kota Makassar.", category: "kepegawaian", icon: "fa-id-card", system: true },
+        { id: "seed-24", title: "Portal Web ANBK", url: "https://anbk.kemendikdasmen.go.id", desc: "Pusat sinkronisasi data proktor, penjadwalan sesi ujian, pembagian gelombang, and pengunduhan kartu login.", category: "ujian", icon: "fa-computer", system: true },
+        { id: "seed-25", title: "Bio-AN SMP", url: "https://bioansmp.kemendikdasmen.go.id", desc: "Sistem pangkalan data calon peserta didik yang akan ditarik secara acak untuk mengikuti Asesmen Nasional.", category: "ujian", icon: "fa-id-card", system: true },
+        { id: "seed-26", title: "Pusat Asesmen Pendidikan (Tes Bakat)", url: "https://tka.kemendikdasmen.go.id/", desc: "Pusat administrasi pengujian bakat minat and pengadaan aplikasi tes bakat terstandar.", category: "ujian", icon: "fa-computer", system: true },
+        { id: "seed-27", title: "Dinas Pendidikan Kota Makassar", url: "https://disdik.makassarkota.go.id", desc: "Situs portal utama Dinas Pendidikan Kota Makassar untuk melacak pengumuman, mutasi siswa, and kebijakan.", category: "daerah", icon: "fa-city", system: true },
+        { id: "seed-28", title: "Sistem PPDB Kota Makassar", url: "https://spmb.makassarkota.go.id/cloginsekolahx", desc: "Manajemen proses seleksi penerimaan siswa baru jenjang SMP (Jalur Zonasi, Afirmasi, and Prestasi).", category: "daerah", icon: "fa-city", system: true },
+        { id: "seed-29", title: "Uji Kecepatan Internet (Speedtest)", url: "https://speedtest.net", desc: "Periksa latensi and kecepatan bandwidth internet sebelum melaksanakan sinkronisasi Dapodik massal.", category: "daerah", icon: "fa-network-wired", system: true },
+        { id: "seed-mbg", title: "Pusat Pendataan MBG", url: "https://mbg.pdm.kemendikdasmen.go.id/portal", desc: "Portal administrasi and pelaporan berkala pelaksanaan program Makan Bergizi Gratis di sekolah.", category: "daerah", icon: "fa-utensils", system: true }
       ];
 
       const defaultWaTemplates = [
-        { id: "rapor", name: "1. Pengumpulan Nilai E-Rapor", text: `Yth. {nama},\n\nMohon bantuannya untuk segera menginput dan menyinkronkan Nilai Rapor Kelas Anda ke aplikasi E-Rapor ${CONFIG.SCHOOL_NAME_SHORT} sebelum batas waktu pengumpulan.\n\nTerima kasih atas dedikasi dan kerja samanya.\n\nSalam,\nOperator Dapodik` },
-        { id: "data", name: "2. Perbaikan Berkas & NIK Dapodik", text: "Yth. {nama},\n\nMohon kesediaannya untuk memeriksa kembali dan memverifikasi kelengkapan berkas kependudukan, kesesuaian NIK, serta Riwayat Kepangkatan Anda di portal Dapodik sekolah.\n\nHarap hubungi operator jika terdapat kekeliruan.\n\nTerima kasih,\nOperator Dapodik" },
-        { id: "belajar", name: "3. Aktivasi Akun Belajar.id", text: "Yth. {nama},\n\nHarap segera melakukan aktivasi akun pembelajaran Belajar.id Anda demi kelancaran akses rapor pendidikan, platform Merdeka Mengajar, and administrasi dinas lainnya.\n\nJika menemui kendala reset password, harap hubungi Operator sekolah.\n\nTerima kasih,\nOperator Dapodik" }
+        { id: "rapor", name: "1. Batas Waktu Input Nilai E-Rapor", text: `Yth. Bapak/Ibu Guru {nama},\n\nMohon bantuannya untuk segera menyelesaikan pengisian dan penyelarasan Nilai Rapor Kelas Anda pada aplikasi E-Rapor ${CONFIG.SCHOOL_NAME_SHORT} sebelum batas waktu yang telah ditentukan.\n\nTerima kasih atas dedikasi dan kerja sama yang baik.\n\nSalam,\nOperator IT & Dapodik` },
+        { id: "data", name: "2. Verifikasi Berkas & Identitas Dapodik", text: "Yth. Bapak/Ibu {nama},\n\nMohon kesediaan Anda untuk memeriksa kembali kelengkapan data kependudukan, validitas NIK, serta riwayat kepangkatan Anda di sistem Dapodik sekolah.\n\nJika terdapat kekeliruan data, mohon segera hubungi Operator sekolah untuk pengajuan perbaikan.\n\nTerima kasih,\nOperator IT & Dapodik" },
+        { id: "belajar", name: "3. Aktivasi Akun Belajar.id Guru", text: "Yth. Bapak/Ibu {nama},\n\nHarap segera mengaktifkan akun pembelajaran resmi Belajar.id Anda. Akun ini sangat dibutuhkan untuk mengakses data penilaian guru pada Rapor Pendidikan, Platform Merdeka Mengajar (PMM), serta administrasi kedinasan lainnya.\n\nJika terdapat kendala kata sandi, hubungi operator sekolah untuk dibantu proses reset.\n\nTerima kasih,\nOperator IT & Dapodik" }
       ];
 
       // ==========================================================
-      // 4. DEKLARASI SECURE STORAGE & UTILS (Wajib Di Sini!)
+      // 4. DEKLARASI SECURE STORAGE & UTILS
       // ==========================================================
       function secureSave(key, rawData) {
         try {
@@ -818,7 +803,8 @@
             return JSON.parse(rawValue);
           }
           if (typeof CryptoJS !== 'undefined') {
-            return JSON.parse(CryptoJS.AES.decrypt(rawValue, CONFIG.SECURE_PASS_KEY).toString(CryptoJS.enc.Utf8));
+            const dec = CryptoJS.AES.decrypt(rawValue, CONFIG.SECURE_PASS_KEY).toString(CryptoJS.enc.Utf8);
+            return dec ? JSON.parse(dec) : null;
           }
           return JSON.parse(rawValue);
         } catch (error) {
@@ -849,6 +835,7 @@
 
       function showCustomConfirm(title, message, callback, iconClass = 'fa-circle-question') {
         const modal = document.getElementById('custom-confirm-modal');
+        if (!modal) return;
         document.getElementById('confirm-modal-title').textContent = title;
         document.getElementById('confirm-modal-message').textContent = message;
         document.getElementById('confirm-modal-icon').className = `fa-solid ${iconClass}`;
@@ -857,17 +844,14 @@
         modal.children[0].classList.replace('scale-95', 'scale-100');
       }
 
-      // Tutup Custom Confirm Modal
       function closeCustomConfirm(approved = false) {
         const modal = document.getElementById('custom-confirm-modal');
+        if (!modal) return;
         modal.classList.add('opacity-0', 'pointer-events-none');
         modal.children[0].classList.replace('scale-100', 'scale-95');
         if (approved && typeof activeConfirmCallback === 'function') activeConfirmCallback();
         activeConfirmCallback = null;
       }
-
-      document.getElementById('btn-confirm-cancel').addEventListener('click', () => closeCustomConfirm(false));
-      document.getElementById('btn-confirm-ok').addEventListener('click', () => closeCustomConfirm(true));
 
       function copyText(textToCopy, successMessage) {
         const dummy = document.createElement('textarea');
@@ -876,7 +860,7 @@
         dummy.select();
         document.execCommand('copy');
         document.body.removeChild(dummy);
-        showToast(successMessage || "Berhasil disalin!");
+        showToast(successMessage || "Data berhasil disalin ke papan klip!");
       }
 
       function toggleTheme() {
@@ -894,12 +878,11 @@
         const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
         const witaDate = new Date(utc + (3600000 * 8)); // WITA (UTC+8)
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         timeDisplay.textContent = `${String(witaDate.getHours()).padStart(2, '0')}:${String(witaDate.getMinutes()).padStart(2, '0')}:${String(witaDate.getSeconds()).padStart(2, '0')} WITA`;
         dateDisplay.textContent = `${days[witaDate.getDay()]}, ${witaDate.getDate()} ${months[witaDate.getMonth()]} ${witaDate.getFullYear()}`;
       }
 
-      // Status Koneksi Luring / Daring
       function updateOnlineStatus(isOnline) {
         const bdg = document.getElementById('status-badge');
         const icn = document.getElementById('status-badge-icon');
@@ -912,28 +895,29 @@
           icn.className = "fa-solid fa-cloud-arrow-up animate-pulse";
           txtBdg.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 border border-emerald-200/50";
           plse.className = "w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse";
-          lbl.textContent = "Online";
+          lbl.textContent = "Daring (Online)";
         } else {
           bdg.className = "absolute -bottom-1 -right-1 block h-5 w-5 rounded-full ring-4 ring-white dark:ring-slate-800 bg-amber-500 flex items-center justify-center text-[10px] text-white font-bold transition-colors";
           icn.className = "fa-solid fa-hard-drive";
           txtBdg.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 dark:bg-amber-950/40 border border-amber-200/50";
           plse.className = "w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500 animate-ping";
-          lbl.textContent = "Offline (Lokal)";
+          lbl.textContent = "Luring (Offline)";
         }
       }
-      window.addEventListener('offline', () => { showToast('⚠️ Mode Offline Aktif.', 'warning'); updateOnlineStatus(false); });
-      window.addEventListener('online', () => { showToast('⚡ Portal terhubung daring.', 'success'); updateOnlineStatus(true); });
+      window.addEventListener('offline', () => { showToast('⚠️ Mode luring aktif. Data disimpan di penyimpanan lokal browser Anda.', 'warning'); updateOnlineStatus(false); });
+      window.addEventListener('online', () => { showToast('⚡ Portal kembali terhubung daring.', 'success'); updateOnlineStatus(true); });
 
-      // Sistem Idle Sesi otomatis
       function resetIdleTimer() { if (!sessionLocked) idleTimeCounter = 0; }
 
       function lockUserSession() {
         sessionLocked = true;
         const screen = document.getElementById('idle-lock-screen');
         const card = document.getElementById('lock-card');
-        screen.classList.replace('pointer-events-none', 'pointer-events-auto');
-        screen.classList.replace('opacity-0', 'opacity-100');
-        card.classList.replace('scale-95', 'scale-100');
+        if (screen && card) {
+          screen.classList.replace('pointer-events-none', 'pointer-events-auto');
+          screen.classList.replace('opacity-0', 'opacity-100');
+          card.classList.replace('scale-95', 'scale-100');
+        }
       }
 
       function unlockSession() {
@@ -941,60 +925,258 @@
         idleTimeCounter = 0;
         const screen = document.getElementById('idle-lock-screen');
         const card = document.getElementById('lock-card');
-        screen.classList.replace('pointer-events-auto', 'pointer-events-none');
-        screen.classList.replace('opacity-100', 'opacity-0');
-        card.classList.replace('scale-100', 'scale-95');
-        showToast("Sesi dipulihkan!", "success");
+        if (screen && card) {
+          screen.classList.replace('pointer-events-auto', 'pointer-events-none');
+          screen.classList.replace('opacity-100', 'opacity-0');
+          card.classList.replace('scale-100', 'scale-95');
+          showToast("Sesi kerja berhasil dipulihkan!", "success");
+        }
       }
 
-      // ==========================================
-      // 5. MODUL MULTI-FACTOR AUTHENTICATOR (TOTP RFC 6238)
-      // ==========================================
+      // ==========================================================
+      // 5. MULTI-FACTOR AUTHENTICATOR LOGIC & MIGRATION DECODER
+      // ==========================================================
+      
+      // Fungsi dekode Base32 yang telah ditingkatkan kekuatannya (Robust Base32)
       function base32toWordArray(b32) {
-        const c = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"; let b = "";
-        for (let i = 0; i < b32.length; i++) { const v = c.indexOf(b32.charAt(i)); if (v !== -1) b += v.toString(2).padStart(5, '0'); }
-        const w = []; for (let i = 0; i < b.length; i += 32) w.push(parseInt(b.substr(i, 32).padEnd(32, '0'), 2) | 0);
-        return CryptoJS.lib.WordArray.create(w, Math.floor(b.length / 8));
+        const cleaned = b32.replace(/[\s\-=]+/g, "").toUpperCase();
+        if (!cleaned || cleaned.length === 0) return CryptoJS.lib.WordArray.create([]);
+        
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        let binaryString = "";
+        
+        for (let i = 0; i < cleaned.length; i++) {
+          const val = alphabet.indexOf(cleaned.charAt(i));
+          if (val !== -1) {
+            binaryString += val.toString(2).padStart(5, '0');
+          }
+        }
+        
+        const words = [];
+        for (let i = 0; i < binaryString.length; i += 32) {
+          const chunk = binaryString.substr(i, 32).padEnd(32, '0');
+          words.push(parseInt(chunk, 2) | 0);
+        }
+        
+        return CryptoJS.lib.WordArray.create(words, Math.floor(binaryString.length / 8));
       }
 
-      function generateTOTP(s) {
+      // Fungsi pembuatan TOTP (RFC 6238)
+      function generateTOTP(secretKey) {
         try {
-          const key = base32toWordArray(s.replace(/\s+/g, "").toUpperCase()); if (!key || key.sigBytes === 0) return "000000";
-          const hmacHex = CryptoJS.enc.Hex.stringify(CryptoJS.HmacSHA1(CryptoJS.enc.Hex.parse(Math.floor(Date.now() / 30000).toString(16).padStart(16, '0')), key));
+          if (!secretKey) return "000000";
+          const key = base32toWordArray(secretKey);
+          if (!key || key.sigBytes === 0) return "INV-KEY";
+          
+          const epoch = Math.floor(Date.now() / 30000);
+          const timeHex = epoch.toString(16).padStart(16, '0');
+          
+          const hmac = CryptoJS.HmacSHA1(CryptoJS.enc.Hex.parse(timeHex), key);
+          const hmacHex = CryptoJS.enc.Hex.stringify(hmac);
+          
           const offset = parseInt(hmacHex.substring(hmacHex.length - 1), 16);
-          return String((parseInt(hmacHex.substring(offset * 2, offset * 2 + 8), 16) & 0x7fffffff) % 1000000).padStart(6, '0');
-        } catch (e) { return "000000"; }
+          const otpPart = hmacHex.substring(offset * 2, offset * 2 + 8);
+          const binaryToken = (parseInt(otpPart, 16) & 0x7fffffff) % 1000000;
+          return String(binaryToken).padStart(6, '0');
+        } catch (e) {
+          return "ERR-OTP";
+        }
       }
 
-      // Render daftar token 2FA (Dikunci persis 2 kolom saja demi estetika layar lebar)
+      // --- DECODER PROTOBUF UNTUK GOOGLE AUTHENTICATOR MIGRATION ---
+      
+      function readVarint(bytes, offset) {
+        let value = 0;
+        let shift = 0;
+        while (true) {
+          if (offset >= bytes.length) throw new Error("Format data Varint tidak lengkap");
+          const b = bytes[offset++];
+          value |= (b & 0x7F) << shift;
+          if (!(b & 0x80)) break;
+          shift += 7;
+          if (shift > 35) throw new Error("Ukuran Varint melebihi batas");
+        }
+        return { value, offset };
+      }
+
+      function parseProtobuf(bytes) {
+        let offset = 0;
+        const fields = [];
+        while (offset < bytes.length) {
+          try {
+            const keyResult = readVarint(bytes, offset);
+            const key = keyResult.value;
+            offset = keyResult.offset;
+            const wireType = key & 0x07;
+            const fieldNumber = key >>> 3;
+            
+            let value;
+            if (wireType === 0) { // Varint
+              const varintResult = readVarint(bytes, offset);
+              value = varintResult.value;
+              offset = varintResult.offset;
+            } else if (wireType === 2) { // Length-delimited
+              const lenResult = readVarint(bytes, offset);
+              const len = lenResult.value;
+              offset = lenResult.offset;
+              value = bytes.slice(offset, offset + len);
+              offset += len;
+            } else if (wireType === 1) { // 64-bit
+              value = bytes.slice(offset, offset + 8);
+              offset += 8;
+            } else if (wireType === 5) { // 32-bit
+              value = bytes.slice(offset, offset + 4);
+              offset += 4;
+            } else {
+              break; 
+            }
+            fields.push({ fieldNumber, wireType, value });
+          } catch (e) {
+            break;
+          }
+        }
+        return fields;
+      }
+
+      function uint8ArrayToBase32(arr) {
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        let bits = 0;
+        let value = 0;
+        let output = "";
+        for (let i = 0; i < arr.length; i++) {
+          value = (value << 8) | arr[i];
+          bits += 8;
+          while (bits >= 5) {
+            output += alphabet[(value >>> (bits - 5)) & 31];
+            bits -= 5;
+          }
+        }
+        if (bits > 0) {
+          output += alphabet[(value << (5 - bits)) & 31];
+        }
+        return output;
+      }
+
+      function safeAtob(str) {
+        let cleaned = str.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, '');
+        while (cleaned.length % 4 !== 0) {
+          cleaned += '=';
+        }
+        return atob(cleaned);
+      }
+
+      function parseGoogleMigrationUri(uri) {
+        try {
+          const urlObj = new URL(uri);
+          const dataParam = urlObj.searchParams.get("data");
+          if (!dataParam) return null;
+          
+          const binaryString = safeAtob(dataParam);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          
+          const fields = parseProtobuf(bytes);
+          const accounts = [];
+          
+          const otpParamsFields = fields.filter(f => f.fieldNumber === 1 && f.wireType === 2);
+          
+          for (const field of otpParamsFields) {
+            const subFields = parseProtobuf(field.value);
+            let secretBytes = null;
+            let name = "";
+            let issuer = "";
+            
+            for (const sf of subFields) {
+              if (sf.fieldNumber === 1 && sf.wireType === 2) {
+                secretBytes = sf.value;
+              } else if (sf.fieldNumber === 2 && sf.wireType === 2) {
+                name = new TextDecoder().decode(sf.value);
+              } else if (sf.fieldNumber === 3 && sf.wireType === 2) {
+                issuer = new TextDecoder().decode(sf.value);
+              }
+            }
+            
+            if (secretBytes && secretBytes.length > 0) {
+              const base32Secret = uint8ArrayToBase32(secretBytes);
+              accounts.push({
+                label: issuer || name || "Akun Google",
+                user: name || "-",
+                key: base32Secret
+              });
+            }
+          }
+          return accounts;
+        } catch (e) {
+          console.error("Kesalahan ketika membaca data ekspor:", e);
+          return null;
+        }
+      }
+
+      // Render daftar OTP Aktif secara responsif beserta dengan sisa waktu individual
       function renderAuthenticatorKeys() {
-        const c = document.getElementById('main-authenticator-list'); if (!c) return;
-        c.innerHTML = ''; const q = document.getElementById('search-input').value.toLowerCase().trim();
-        const fil = authenticatorKeys.filter(k => k.label.toLowerCase().includes(q) || k.user.toLowerCase().includes(q));
-        if (fil.length === 0) {
-          c.innerHTML = `<div class="col-span-1 sm:col-span-2 p-8 text-center text-slate-400 italic">Belum ada akun TOTP tersimpan.</div>`;
+        const container = document.getElementById('main-authenticator-list');
+        if (!container) return;
+        
+        const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+        const filteredKeys = authenticatorKeys.filter(k => 
+          k.label.toLowerCase().includes(searchQuery) || 
+          k.user.toLowerCase().includes(searchQuery)
+        );
+        
+        // Perbarui badge jumlah 2FA Hub secara dinamis
+        const badge2Fa = document.getElementById('badge-2fa_auth');
+        if (badge2Fa) badge2Fa.textContent = authenticatorKeys.length;
+
+        // Tampilkan pesan jika tidak ditemukan hasil
+        if (filteredKeys.length === 0) {
+          if (searchQuery.length > 0) {
+            container.innerHTML = `<div class="col-span-1 md:col-span-2 p-8 text-center text-slate-400 italic">Akun OTP dengan kata kunci "${searchQuery}" tidak ditemukan.</div>`;
+          } else {
+            container.innerHTML = `<div class="col-span-1 md:col-span-2 p-8 text-center text-slate-400 italic">Belum ada akun TOTP tersimpan. Mulailah memindai kode QR atau menambah kunci secara manual.</div>`;
+          }
           return;
         }
-        fil.forEach(k => {
-          const d = document.createElement('div');
-          d.className = 'p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700/60 rounded-2xl hover:shadow-md transition duration-200';
-          const tok = generateTOTP(k.key);
-          d.innerHTML = `
-            <div class="flex justify-between items-start mb-1.5">
-              <div class="truncate pr-4">
-                <h4 class="text-xs font-black truncate text-slate-900 dark:text-white">${k.label}</h4>
-                <p class="text-[10px] text-slate-400 dark:text-slate-500">${k.user}</p>
+
+        const secondsLeft = 30 - (Math.floor(Date.now() / 1000) % 30);
+
+        let htmlContent = "";
+        filteredKeys.forEach(k => {
+          const currentOtp = generateTOTP(k.key);
+          const formattedOtp = currentOtp.length === 6 ? `${currentOtp.substring(0,3)} ${currentOtp.substring(3,6)}` : currentOtp;
+          
+          // Penentuan tema warna dan animasi lencana sisa detik individual
+          const badgeColorClass = secondsLeft < 6 
+            ? "bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-900/40" 
+            : "bg-blue-50 dark:bg-slate-800/80 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-slate-700";
+
+          const stopwatchAnimClass = secondsLeft < 6 ? "animate-ping" : "";
+
+          htmlContent += `
+            <div class="p-4 bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 rounded-2xl hover:shadow-md transition duration-200">
+              <div class="flex justify-between items-start mb-2.5">
+                <div class="truncate pr-2 w-[65%]">
+                  <h4 class="text-xs font-black truncate text-slate-900 dark:text-white" title="${k.label}">${k.label}</h4>
+                  <p class="text-[10px] text-slate-400 dark:text-slate-500 truncate" title="${k.user}">${k.user}</p>
+                </div>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  <!-- Lencana Sisa Waktu Individual per OTP -->
+                  <span class="text-[9px] font-mono px-1.5 py-0.5 rounded-md border ${badgeColorClass} font-black flex items-center gap-1 transition-colors duration-300" title="Sisa waktu token">
+                    <i class="fa-solid fa-stopwatch ${stopwatchAnimClass}"></i> ${secondsLeft}s
+                  </span>
+                  <button onclick="delete2FaKey('${k.id}')" class="text-slate-300 hover:text-rose-500 transition p-1" title="Hapus Kunci Keamanan">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                  </button>
+                </div>
               </div>
-              <button onclick="delete2FaKey('${k.id}')" class="text-slate-300 hover:text-rose-500 transition" title="Hapus Kunci">
-                <i class="fa-solid fa-trash-can text-[10px]"></i>
-              </button>
-            </div>
-            <div onclick="copyText('${tok}', 'OTP disalin!')" class="bg-white dark:bg-slate-800 py-2.5 rounded-xl border border-slate-100 dark:border-slate-700 text-center cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 active:scale-95 transition-all" title="Klik untuk menyalin OTP">
-              <span class="font-space font-black text-xl tracking-widest text-blue-600 dark:text-blue-400">${tok}</span>
+              <div onclick="copyText('${currentOtp}', 'Token OTP untuk ${k.label} berhasil disalin!')" class="bg-slate-50 dark:bg-slate-900 py-3 rounded-xl border border-slate-100 dark:border-slate-700 text-center cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 active:scale-95 transition-all group" title="Klik untuk menyalin token">
+                <span class="font-space font-black text-2xl tracking-wider text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">${formattedOtp}</span>
+              </div>
             </div>
           `;
-          c.appendChild(d);
         });
+        container.innerHTML = htmlContent;
       }
 
       function saveAuthenticatorKeys() {
@@ -1004,83 +1186,222 @@
       }
 
       function save2FaKeyFromMain() {
-        const l = document.getElementById('auth-main-label').value;
-        const u = document.getElementById('auth-main-user').value;
-        const k = document.getElementById('auth-main-key').value.replace(/\s+/g, '').toUpperCase();
-        if(!l || !k) return showToast("Lengkapi form kunci manual!", "warning");
-        authenticatorKeys.push({ id: '2fa-' + Date.now(), label: l, user: u || '-', key: k });
+        const labelInput = document.getElementById('auth-main-label');
+        const userInput = document.getElementById('auth-main-user');
+        const keyInput = document.getElementById('auth-main-key');
+
+        const rawLabel = labelInput.value.trim();
+        const rawUser = userInput.value.trim();
+        const rawKey = keyInput.value.replace(/[\s\-=]+/g, '').toUpperCase();
+
+        if (!rawLabel || !rawKey) {
+          return showToast("Harap lengkapi nama layanan dan kunci rahasia!", "warning");
+        }
+
+        if (!/^[A-Z2-7]+$/.test(rawKey)) {
+          return showToast("Kunci rahasia tidak valid! Format kunci Base32 hanya boleh berisi huruf A-Z dan angka 2-7.", "error");
+        }
+
+        const newId = '2fa-' + Date.now();
+        authenticatorKeys.push({ 
+          id: newId, 
+          label: rawLabel, 
+          user: rawUser || '-', 
+          key: rawKey 
+        });
+
         saveAuthenticatorKeys();
         renderAuthenticatorKeys();
-        showToast("Kunci OTP berhasil didaftarkan!");
-        document.getElementById('auth-main-label').value = '';
-        document.getElementById('auth-main-user').value = '';
-        document.getElementById('auth-main-key').value = '';
+        showToast(`Akun keamanan OTP "${rawLabel}" berhasil ditambahkan!`);
+        
+        labelInput.value = '';
+        userInput.value = '';
+        keyInput.value = '';
       }
 
       function delete2FaKey(id) {
-        showCustomConfirm("Hapus Kunci OTP?", "Akun OTP Anda akan dihapus secara permanen.", () => {
+        const keyObj = authenticatorKeys.find(k => k.id === id);
+        const nameLabel = keyObj ? keyObj.label : "Kunci OTP";
+        
+        showCustomConfirm("Hapus Kunci Keamanan?", `Akun OTP "${nameLabel}" akan dihapus secara permanen dari browser ini.`, () => {
           authenticatorKeys = authenticatorKeys.filter(k => k.id !== id);
           saveAuthenticatorKeys();
           renderAuthenticatorKeys();
-          showToast("Kunci OTP berhasil dihapus.");
+          showToast(`Akun keamanan "${nameLabel}" berhasil dihapus.`);
         }, 'fa-trash-can');
       }
 
+      // Mesin TOTP Engine Real-time diperbaiki agar update timer responsif & tepat waktu
       function startTotpEngine() {
         if (totpIntervalId) clearInterval(totpIntervalId);
-        totpIntervalId = setInterval(() => {
-          const sec = 30 - (Math.round(Date.now() / 1000) % 30);
-          const tt = document.getElementById('otp-timer-text'); const pb = document.getElementById('otp-progress-bar');
-          if (tt) tt.textContent = sec;
-          if (pb) { pb.style.width = `${(sec / 30) * 100}%`; pb.className = sec < 5 ? "h-full bg-rose-500 rounded-full transition-all" : "h-full bg-blue-600 rounded-full transition-all"; }
-          if (sec === 30 || sec === 29) renderAuthenticatorKeys();
-        }, 1000);
+        
+        function updateTick() {
+          const now = Date.now();
+          const secondsLeft = 30 - (Math.floor(now / 1000) % 30);
+          
+          const tt = document.getElementById('otp-timer-text'); 
+          const pb = document.getElementById('otp-progress-bar');
+          
+          if (tt) tt.textContent = secondsLeft;
+          if (pb) { 
+            const percentage = (secondsLeft / 30) * 100;
+            pb.style.width = `${percentage}%`; 
+            if (secondsLeft < 6) {
+              pb.className = "h-full bg-rose-500 rounded-full transition-all duration-300";
+            } else {
+              pb.className = "h-full bg-blue-600 rounded-full transition-all duration-300";
+            }
+          }
+          
+          renderAuthenticatorKeys();
+        }
+        
+        updateTick();
+        totpIntervalId = setInterval(updateTick, 1000);
+      }
+
+      // Pengurai URL otpauth:// untuk ekstraksi data otomatis dari QR Code standar
+      function parseOtpAuthUri(uri) {
+        try {
+          if (!uri.startsWith('otpauth://')) return null;
+          const url = new URL(uri);
+          const params = new URLSearchParams(url.search);
+          const secret = params.get('secret');
+          if (!secret) return null;
+
+          let label = decodeURIComponent(url.pathname.replace(/^\//, ''));
+          let issuer = params.get('issuer') || '';
+          let user = '';
+
+          if (label.includes(':')) {
+            const parts = label.split(':');
+            if (!issuer) issuer = parts[0].trim();
+            user = parts.slice(1).join(':').trim();
+          } else {
+            user = label.trim();
+          }
+          
+          if (!issuer) issuer = 'TOTP';
+
+          return { label: issuer, user: user || '-', key: secret };
+        } catch (e) {
+          const secretMatch = uri.match(/[?&]secret=([^&]+)/i);
+          if (secretMatch) {
+            const secret = secretMatch[1];
+            const issuerMatch = uri.match(/[?&]issuer=([^&]+)/i);
+            const issuer = issuerMatch ? decodeURIComponent(issuerMatch[1]) : 'TOTP';
+            return { label: issuer, user: '-', key: secret };
+          }
+          return null;
+        }
+      }
+
+      // Handler untuk memproses dan menggenerasi hasil scan / unggahan QR Code secara instan
+      function handleQrCodeResult(res) {
+        if (res.startsWith('otpauth-migration://')) {
+          const accounts = parseGoogleMigrationUri(res);
+          if (accounts && accounts.length > 0) {
+            let successCount = 0;
+            accounts.forEach(acc => {
+              const newId = '2fa-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+              if (!authenticatorKeys.some(k => k.key === acc.key)) {
+                authenticatorKeys.push({
+                  id: newId,
+                  label: acc.label,
+                  user: acc.user,
+                  key: acc.key
+                });
+                successCount++;
+              }
+            });
+            if (successCount > 0) {
+              saveAuthenticatorKeys();
+              renderAuthenticatorKeys();
+              showToast(`Berhasil mengimpor ${successCount} akun dari Google Authenticator!`, 'success');
+            } else {
+              showToast("Seluruh akun dari data migrasi ini sudah terdaftar sebelumnya di sistem.", "warning");
+            }
+          } else {
+            showToast("Gagal menguraikan struktur data migrasi Google Authenticator.", "error");
+          }
+          return;
+        }
+
+        const parsed = parseOtpAuthUri(res);
+        if (parsed) {
+          document.getElementById('auth-main-label').value = parsed.label;
+          document.getElementById('auth-main-user').value = parsed.user;
+          document.getElementById('auth-main-key').value = parsed.key;
+          save2FaKeyFromMain();
+        } else {
+          const cleaned = res.replace(/[\s\-=]+/g, '').toUpperCase();
+          if (/^[A-Z2-7]+$/.test(cleaned)) {
+            document.getElementById('auth-main-key').value = cleaned;
+            showToast("Kunci rahasia berhasil dimuat. Silakan lengkapi nama layanan untuk menyimpan.", "warning");
+          } else {
+            showToast("Hasil pembacaan Kode QR tidak berisi format data OTP yang valid.", "error");
+          }
+        }
       }
 
       function toggleQrScanner() {
+        if (typeof Html5Qrcode === 'undefined') {
+          showToast("Pustaka sistem pemindai Kode QR belum siap dimuat.", "error");
+          return;
+        }
         const wrp = document.getElementById('qr-reader-wrapper');
         const bText = document.getElementById('text-btn-scan');
         if (isScanning) {
-          wrp.classList.add('hidden');
-          bText.textContent = "Scan Kamera";
+          if (wrp) wrp.classList.add('hidden');
+          if (bText) bText.textContent = "Pindai Kamera";
           isScanning = false;
-          if (qrScannerObj) qrScannerObj.stop();
+          if (qrScannerObj) {
+            qrScannerObj.stop().catch(() => {});
+          }
         } else {
-          wrp.classList.remove('hidden');
-          bText.textContent = "Hentikan";
+          if (wrp) wrp.classList.remove('hidden');
+          if (bText) bText.textContent = "Hentikan";
           isScanning = true;
           qrScannerObj = new Html5Qrcode("qr-reader");
           qrScannerObj.start(
             { facingMode: "environment" },
-            { fps: 10, qrbox: 200 },
+            { fps: 15, qrbox: 220 },
             res => {
               toggleQrScanner();
-              document.getElementById('auth-main-key').value = res;
-              showToast("QR Code berhasil dipindai!");
+              handleQrCodeResult(res);
             },
             () => {}
-          );
+          ).catch(() => {
+            toggleQrScanner();
+            showToast("Gagal memperoleh hak akses untuk membuka kamera perangkat Anda.", "error");
+          });
         }
       }
 
-      function triggerQrFileInput() { document.getElementById('qr-file-input').click(); }
+      function triggerQrFileInput() { 
+        const fileInput = document.getElementById('qr-file-input');
+        if (fileInput) fileInput.click(); 
+      }
+      
       function scanQrFile(e) {
+        if (typeof Html5Qrcode === 'undefined') {
+          showToast("Sistem pembaca Kode QR luring belum siap.", "error");
+          return;
+        }
         if(e.target.files[0]) {
           new Html5Qrcode("qr-reader").scanFile(e.target.files[0], true).then(res => {
-            document.getElementById('auth-main-key').value = res;
-            showToast("Kode berhasil diekstrak!");
+            handleQrCodeResult(res);
           }).catch(() => {
-            showToast("Gagal mendeteksi kode QR dalam gambar.", "error");
+            showToast("Gagal mendeteksi adanya simbol Kode QR yang valid dari berkas gambar tersebut.", "error");
           });
         }
       }
 
       // ==========================================
-      // 6. MODUL PORTAL DATA (DAPODIK UTAMA)
+      // 6. PORTAL DATA & LINKS LOGIC
       // ==========================================
       function saveLinks() { secureSave(CONFIG.STORAGE_PREFIX + 'links', linksData); }
       
-      // Render daftar tautan (Dikunci persis 2 kolom saja di semua layar lebar / monitor besar)
       function renderDynamicLinks() {
         const wrapper = document.getElementById('dynamic-links-wrapper');
         if (!wrapper) return;
@@ -1088,12 +1409,12 @@
 
         const catMap = {
           'utama': { title: 'Portal Utama & Dapodik', icon: 'fa-folder-open', color: 'text-blue-500' },
-          'verval': { title: 'Verval & Validasi', icon: 'fa-shield-halved', color: 'text-emerald-500' },
-          'keuangan': { title: 'BOS & Keuangan', icon: 'fa-wallet', color: 'text-amber-500' },
-          'guru': { title: 'Layanan PTK', icon: 'fa-chalkboard-user', color: 'text-indigo-500' },
-          'kepegawaian': { title: 'Layanan ASN', icon: 'fa-id-card-clip', color: 'text-sky-500' },
-          'ujian': { title: 'Asesmen (ANBK)', icon: 'fa-laptop-code', color: 'text-rose-500' },
-          'daerah': { title: 'Dinas & Daerah', icon: 'fa-city', color: 'text-purple-500' }
+          'verval': { title: 'Sistem Verval & Validasi', icon: 'fa-shield-halved', color: 'text-emerald-500' },
+          'keuangan': { title: 'Sistem Keuangan & BOSP', icon: 'fa-wallet', color: 'text-amber-500' },
+          'guru': { title: 'Layanan GTK', icon: 'fa-chalkboard-user', color: 'text-indigo-500' },
+          'kepegawaian': { title: 'Manajemen Kepegawaian ASN', icon: 'fa-id-card-clip', color: 'text-sky-500' },
+          'ujian': { title: 'Asesmen Nasional (ANBK)', icon: 'fa-laptop-code', color: 'text-rose-500' },
+          'daerah': { title: 'Portal Dinas & Daerah', icon: 'fa-city', color: 'text-purple-500' }
         };
 
         const q = document.getElementById('search-input').value.toLowerCase().trim();
@@ -1121,7 +1442,6 @@
             const sec = document.createElement('div');
             sec.innerHTML = `<h3 class="text-xs font-black tracking-wider uppercase text-slate-400 mb-4 flex items-center gap-2"><i class="fa-solid ${catMap[cat].icon} ${catMap[cat].color}"></i> ${catMap[cat].title}</h3>`;
             
-            // Grid dikunci tepat 2 kolom saja untuk semua layar lebar (sm:grid-cols-2)
             const grid = document.createElement('div');
             grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-4';
             
@@ -1156,12 +1476,15 @@
         activeCategory = cat;
         const p2Fa = document.getElementById('panel-2fa-main-auth');
         const pLinks = document.getElementById('panel-links-main-wrapper');
-        if (cat === '2fa_auth') {
-          p2Fa.classList.remove('hidden');
-          pLinks.classList.add('hidden');
-        } else {
-          p2Fa.classList.add('hidden');
-          pLinks.classList.remove('hidden');
+        if (p2Fa && pLinks) {
+          if (cat === '2fa_auth') {
+            p2Fa.classList.remove('hidden');
+            pLinks.classList.add('hidden');
+            renderAuthenticatorKeys();
+          } else {
+            p2Fa.classList.add('hidden');
+            pLinks.classList.remove('hidden');
+          }
         }
         
         document.querySelectorAll('.category-tab').forEach(t => {
@@ -1187,54 +1510,76 @@
 
       function openAddLinkModal() {
         const m = document.getElementById('add-link-modal');
-        m.classList.remove('opacity-0','pointer-events-none');
-        m.children[0].classList.replace('scale-95','scale-100');
+        if (m) {
+          m.classList.remove('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-95','scale-100');
+        }
       }
 
-      // ==========================================
-      // 7. MODUL ASISTEN (AGENDA & MEMO MANAGER)
-      // ==========================================
       function closeAddLinkModal() {
         const m = document.getElementById('add-link-modal');
-        m.classList.add('opacity-0','pointer-events-none');
-        m.children[0].classList.replace('scale-100','scale-95');
+        if (m) {
+          m.classList.add('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-100','scale-95');
+        }
       }
 
       function saveCustomLinkLocal() {
-        const t = document.getElementById('new-link-title').value;
-        const u = document.getElementById('new-link-url').value;
-        const d = document.getElementById('new-link-desc').value;
+        const t = document.getElementById('new-link-title').value.trim();
+        const u = document.getElementById('new-link-url').value.trim();
+        const d = document.getElementById('new-link-desc').value.trim();
         const c = document.getElementById('new-link-category').value;
         const i = document.getElementById('new-link-icon').value;
-        if(!t || !u || !d) return showToast("Harap lengkapi formulir!", "warning");
+        if(!t || !u || !d) return showToast("Harap lengkapi semua formulir isian!", "warning");
         linksData.push({ id: `link-${Date.now()}`, title: t, url: u, desc: d, category: c, icon: i, system: false, createdAt: Date.now() });
         saveLinks();
         renderDynamicLinks();
         closeAddLinkModal();
-        showToast("Tautan berhasil ditambahkan!");
+        showToast("Tautan kustom baru berhasil disimpan!");
         document.getElementById('new-link-title').value = '';
         document.getElementById('new-link-url').value = '';
         document.getElementById('new-link-desc').value = '';
       }
 
       function deleteCustomLink(id) {
-        showCustomConfirm("Hapus Tautan?", "Tautan kustom ini akan dihapus secara permanen.", () => {
+        showCustomConfirm("Hapus Tautan Kustom?", "Tautan kustom ini akan dihapus secara permanen dari daftar Anda.", () => {
           linksData = linksData.filter(l => l.id !== id);
           saveLinks();
           renderDynamicLinks();
-          showToast("Tautan berhasil dihapus.");
+          showToast("Tautan kustom berhasil dihapus.");
         }, 'fa-trash-can');
       }
 
       function resetToDefaultLinks() {
-        showCustomConfirm("Reset Portal?", "Semua tautan kustom Anda akan terhapus dan kembali ke setelan pabrik.", () => {
+        showCustomConfirm("Kembalikan Setelan Tautan?", "Seluruh tautan kustom yang Anda buat akan terhapus dan daftar kembali ke pengaturan awal sistem.", () => {
           linksData = [...defaultSeedLinks];
           saveLinks();
           renderDynamicLinks();
-          showToast("Sistem berhasil di-reset!");
+          showToast("Daftar tautan berhasil diatur kembali ke setelan awal!");
         }, 'fa-arrows-rotate');
       }
 
+      function triggerEmergencyReset() {
+        showCustomConfirm(
+          "Lakukan Reset Sesi Darurat?", 
+          "PERINGATAN DARURAT: Tindakan ini akan menghapus seluruh data sensitif Anda secara permanen dari browser ini, termasuk kunci keamanan 2FA, catatan penting, agenda kerja, serta tautan kustom yang telah ditambahkan. Sistem akan dimuat ulang ke pengaturan awal.", 
+          () => {
+            const keysToRemove = ['links', 'agendas', 'notes', 'auth-keys', 'wa-templates'];
+            keysToRemove.forEach(key => {
+              localStorage.removeItem(CONFIG.STORAGE_PREFIX + key);
+            });
+            showToast("Prosedur darurat berhasil dijalankan. Memuat ulang sistem...", "error");
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
+          }, 
+          'fa-triangle-exclamation'
+        );
+      }
+
+      // ==========================================
+      // 7. ASISTEN (AGENDA & MEMO) LOGIC
+      // ==========================================
       function saveAgenda() { secureSave(CONFIG.STORAGE_PREFIX + 'agendas', agendaData); }
       
       function renderAgenda() {
@@ -1252,7 +1597,7 @@
               <input type="checkbox" ${t.done?'checked':''} onchange="toggleTaskDone('${t.id}')" class="mt-1 h-3 w-3 rounded text-blue-600 focus:ring-blue-500">
               <span class="text-xs ${t.done?'line-through opacity-50':''}">${t.text}</span>
             </label>
-            <button onclick="deleteAgendaItem('${t.id}')" class="text-rose-500 opacity-0 group-hover:opacity-100 transition p-1">
+            <button onclick="deleteAgendaItem('${t.id}')" class="text-rose-500 opacity-0 group-hover:opacity-100 transition p-1" title="Hapus Agenda">
               <i class="fa-solid fa-trash-can text-[10px]"></i>
             </button>`;
           c.appendChild(d);
@@ -1262,26 +1607,29 @@
 
       function openAddAgendaModal() {
         const m = document.getElementById('add-agenda-modal');
-        m.classList.remove('opacity-0','pointer-events-none');
-        m.children[0].classList.replace('scale-95','scale-100');
+        if (m) {
+          m.classList.remove('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-95','scale-100');
+        }
       }
 
-      // Tutup Modal Agenda
       function closeAddAgendaModal() {
         const m = document.getElementById('add-agenda-modal');
-        m.classList.add('opacity-0','pointer-events-none');
-        m.children[0].classList.replace('scale-100','scale-95');
+        if (m) {
+          m.classList.add('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-100','scale-95');
+        }
       }
 
       function addAgendaItem() {
-        const t = document.getElementById('agenda-input-text').value;
+        const t = document.getElementById('agenda-input-text').value.trim();
         if(t) {
           agendaData.push({ id: 'ag-'+Date.now(), text: t, done: false, createdAt: Date.now() });
           saveAgenda();
           renderAgenda();
           closeAddAgendaModal();
           document.getElementById('agenda-input-text').value = '';
-          showToast("Tugas berhasil ditambahkan!");
+          showToast("Agenda baru berhasil disimpan!");
         }
       }
 
@@ -1298,25 +1646,26 @@
         agendaData = agendaData.filter(x=>x.id!==id);
         saveAgenda();
         renderAgenda();
-        showToast("Tugas dihapus.");
+        showToast("Agenda berhasil dihapus.");
       }
 
       function updateCountdownTask() {
         const txt = document.getElementById('countdown-active-task-text');
         const btn = document.getElementById('countdown-active-task-btn');
         const p = agendaData.find(t=>!t.done);
-        if(txt) txt.textContent = p ? p.text : "✅ Semua tugas sinkronisasi selesai!";
+        if(txt) txt.textContent = p ? p.text : "✅ Luar biasa! Seluruh agenda kerja Anda saat ini telah selesai diselesaikan.";
         if(btn) p ? btn.classList.remove('hidden') : btn.classList.add('hidden');
         if(btn && p) btn.onclick = () => toggleTaskDone(p.id);
       }
 
-      // Kalender Real-time
       function initCalendar() {
         const names = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
         const y = currentDateObj.getFullYear();
         const m = currentDateObj.getMonth();
-        document.getElementById('calendar-month-year').textContent = `${names[m]} ${y}`;
+        const headerTitle = document.getElementById('calendar-month-year');
+        if (headerTitle) headerTitle.textContent = `${names[m]} ${y}`;
         const c = document.getElementById('calendar-days-grid');
+        if (!c) return;
         c.innerHTML = '';
         const fd = new Date(y, m, 1).getDay();
         const td = new Date(y, m+1, 0).getDate();
@@ -1324,14 +1673,13 @@
         const today = new Date();
         for(let d=1; d<=td; d++) {
           const isT = today.getDate()===d && today.getMonth()===m && today.getFullYear()===y;
-          c.innerHTML += `<div onclick="document.getElementById('calendar-event-display').innerHTML='<p class=\\'text-[10px] font-bold text-blue-600 dark:text-blue-400\\'><i class=\\'fa-solid fa-circle-info\\'></i> Tgl: ${d} ${names[m]} ${y}</p>'" class="p-1 rounded cursor-pointer ${isT ? 'bg-blue-600 text-white font-bold':'hover:bg-blue-50 dark:hover:bg-slate-700'}">${d}</div>`;
+          c.innerHTML += `<div onclick="document.getElementById('calendar-event-display').innerHTML='<p class=\\'text-[10px] font-bold text-blue-600 dark:text-blue-400\\'><i class=\\'fa-solid fa-circle-info\\'></i> Tanggal: ${d} ${names[m]} ${y}</p>'" class="p-1 rounded cursor-pointer ${isT ? 'bg-blue-600 text-white font-bold':'hover:bg-blue-50 dark:hover:bg-slate-700'}">${d}</div>`;
         }
       }
 
       function prevMonth() { currentDateObj.setMonth(currentDateObj.getMonth()-1); initCalendar(); }
       function nextMonth() { currentDateObj.setMonth(currentDateObj.getMonth()+1); initCalendar(); }
 
-      // Memo Cepat (Buku Saku)
       function renderQuickNotes() {
         const c = document.getElementById('quick-notes-list');
         if(!c) return;
@@ -1341,7 +1689,7 @@
             <div class="p-2 border rounded-xl bg-slate-50/50 dark:bg-slate-900/30 relative group">
               <h5 class="text-[10px] font-bold text-slate-800 dark:text-white">${n.title}</h5>
               <p class="text-[9px] text-slate-500 leading-relaxed line-clamp-2">${n.body}</p>
-              <button onclick="notesData=notesData.filter(x=>x.id!=='${n.id}'); secureSave(CONFIG.STORAGE_PREFIX + 'notes', notesData); renderQuickNotes();" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-rose-500 transition">
+              <button onclick="notesData=notesData.filter(x=>x.id!=='${n.id}'); secureSave(CONFIG.STORAGE_PREFIX + 'notes', notesData); renderQuickNotes();" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-rose-500 transition" title="Hapus Catatan">
                 <i class="fa-solid fa-trash text-[9px]"></i>
               </button>
             </div>`;
@@ -1349,8 +1697,8 @@
       }
 
       function addQuickNote() {
-        const t = document.getElementById('note-title-input').value;
-        const b = document.getElementById('note-body-input').value;
+        const t = document.getElementById('note-title-input').value.trim();
+        const b = document.getElementById('note-body-input').value.trim();
         if(t && b) {
           notesData.push({ id: 'n-'+Date.now(), title: t, body: b });
           secureSave(CONFIG.STORAGE_PREFIX + 'notes', notesData);
@@ -1358,11 +1706,10 @@
           closeAddMemoModal();
           document.getElementById('note-title-input').value = '';
           document.getElementById('note-body-input').value = '';
-          showToast("Memo berhasil ditambahkan!");
+          showToast("Catatan memo berhasil ditambahkan!");
         }
       }
 
-      // Alat WA & Sandi
       function populateWaSelect() {
         const s = document.getElementById('wa-template-select');
         if(s) {
@@ -1373,34 +1720,41 @@
 
       function copyBroadcastMessage() {
         const t = waTemplates.find(x=>x.id===document.getElementById('wa-template-select').value);
-        if(t) copyText(t.text.replace(/{nama}/g, document.getElementById('wa-recipient-name').value || "Bapak/Ibu"));
+        if(t) copyText(t.text.replace(/{nama}/g, document.getElementById('wa-recipient-name').value || "Bapak/Ibu Guru"), "Pesan broadcast disalin ke papan klip!");
       }
 
-      // Navigasi & UI Tab Switcher
       function switchAsistenTab(t) {
         ['agenda', 'kalender', 'alat'].forEach(id => {
-          document.getElementById(`btn-tab-${id}`).className = id === t ? "flex-1 py-2 px-2 rounded-xl text-[11px] font-extrabold bg-white dark:bg-slate-800 text-blue-600 shadow-sm" : "flex-1 py-2 px-2 rounded-xl text-[11px] font-bold text-slate-500 hover:text-slate-800";
-          document.getElementById(`panel-tab-${id}`).classList.toggle('hidden', id !== t);
+          const btn = document.getElementById(`btn-tab-${id}`);
+          const panel = document.getElementById(`panel-tab-${id}`);
+          if (btn) btn.className = id === t ? "flex-1 py-2 px-2 rounded-xl text-[11px] font-extrabold bg-white dark:bg-slate-800 text-blue-600 shadow-sm" : "flex-1 py-2 px-2 rounded-xl text-[11px] font-bold text-slate-500 hover:text-slate-800";
+          if (panel) panel.classList.toggle('hidden', id !== t);
         });
       }
 
       function switchSubTab(t) {
         ['tugas', 'memo'].forEach(id => {
-          document.getElementById(`btn-sub-${id}`).className = id === t ? "flex-1 py-1.5 text-[10px] font-black bg-white dark:bg-slate-800 text-blue-600 shadow-xs rounded-lg" : "flex-1 py-1.5 text-[10px] font-bold text-slate-500 rounded-lg";
-          document.getElementById(`sub-panel-${id}`).classList.toggle('hidden', id !== t);
+          const btn = document.getElementById(`btn-sub-${id}`);
+          const panel = document.getElementById(`sub-panel-${id}`);
+          if (btn) btn.className = id === t ? "flex-1 py-1.5 text-[10px] font-black bg-white dark:bg-slate-800 text-blue-600 shadow-xs rounded-lg" : "flex-1 py-1.5 text-[10px] font-bold text-slate-500 rounded-lg";
+          if (panel) panel.classList.toggle('hidden', id !== t);
         });
       }
 
       function openAddMemoModal() {
         const m = document.getElementById('add-memo-modal');
-        m.classList.remove('opacity-0','pointer-events-none');
-        m.children[0].classList.replace('scale-95','scale-100');
+        if (m) {
+          m.classList.remove('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-95','scale-100');
+        }
       }
 
       function closeAddMemoModal() {
         const m = document.getElementById('add-memo-modal');
-        m.classList.add('opacity-0','pointer-events-none');
-        m.children[0].classList.replace('scale-100','scale-95');
+        if (m) {
+          m.classList.add('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-100','scale-95');
+        }
       }
 
       function sendBroadcastWhatsApp() {
@@ -1414,24 +1768,33 @@
         for(let i=0; i<12; i++) {
           pass += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        document.getElementById('generated-password-input').value = pass;
+        const pwInput = document.getElementById('generated-password-input');
+        if (pwInput) pwInput.value = pass;
       }
 
       function copyGeneratedPassword() {
-        copyText(document.getElementById('generated-password-input').value, "Sandi disalin!");
+        const pwInput = document.getElementById('generated-password-input');
+        if (pwInput) copyText(pwInput.value, "Kata sandi berhasil disalin!");
       }
 
       function openTemplatesModal() {
-        document.getElementById('templates-modal').classList.remove('opacity-0','pointer-events-none');
-        document.getElementById('templates-modal').children[0].classList.replace('scale-95','scale-100');
-        renderTemplatesList();
+        const m = document.getElementById('templates-modal');
+        if (m) {
+          m.classList.remove('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-95','scale-100');
+          renderTemplatesList();
+        }
       }
 
       function closeTemplatesModal() {
-        document.getElementById('templates-modal').classList.add('opacity-0','pointer-events-none');
-        document.getElementById('templates-modal').children[0].classList.replace('scale-100','scale-95');
+        const m = document.getElementById('templates-modal');
+        if (m) {
+          m.classList.add('opacity-0','pointer-events-none');
+          m.children[0].classList.replace('scale-100','scale-95');
+        }
       }
 
+      // Render daftar template siaran WhatsApp
       function renderTemplatesList() {
         const container = document.getElementById('templates-list-container');
         if(!container) return;
@@ -1444,31 +1807,39 @@
                 <p class="text-[10px] text-slate-500 truncate mt-0.5">${t.text}</p>
               </div>
               <div class="flex gap-1.5 flex-shrink-0">
-                <button onclick="editTemplate('${t.id}')" class="text-blue-500 hover:text-blue-700 transition" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button onclick="deleteTemplate('${t.id}')" class="text-rose-500 hover:text-rose-700 transition" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                <button onclick="editTemplate('${t.id}')" class="text-blue-500 hover:text-blue-700 transition" title="Edit Template"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button onclick="deleteTemplate('${t.id}')" class="text-rose-500 hover:text-rose-700 transition" title="Hapus Template"><i class="fa-solid fa-trash-can"></i></button>
               </div>
             </div>`;
         });
       }
 
       function showAddTemplateForm() {
-        document.getElementById('templates-list-view').classList.add('hidden');
-        document.getElementById('template-form-view').classList.remove('hidden');
+        const lv = document.getElementById('templates-list-view');
+        const fv = document.getElementById('template-form-view');
+        if (lv && fv) {
+          lv.classList.add('hidden');
+          fv.classList.remove('hidden');
+        }
         document.getElementById('template-edit-id').value = '';
         document.getElementById('template-name-input').value = '';
         document.getElementById('template-text-input').value = '';
       }
 
       function hideTemplateForm() {
-        document.getElementById('templates-list-view').classList.remove('hidden');
-        document.getElementById('template-form-view').classList.add('hidden');
+        const lv = document.getElementById('templates-list-view');
+        const fv = document.getElementById('template-form-view');
+        if (lv && fv) {
+          lv.classList.remove('hidden');
+          fv.classList.add('hidden');
+        }
       }
 
       function saveTemplate() {
         const id = document.getElementById('template-edit-id').value;
-        const name = document.getElementById('template-name-input').value;
-        const text = document.getElementById('template-text-input').value;
-        if(!name || !text) return showToast("Lengkapi nama & pesan template!", "warning");
+        const name = document.getElementById('template-name-input').value.trim();
+        const text = document.getElementById('template-text-input').value.trim();
+        if(!name || !text) return showToast("Harap isi seluruh isian nama dan isi template!", "warning");
         if(id) {
           const idx = waTemplates.findIndex(t => t.id === id);
           if(idx !== -1) waTemplates[idx] = { id, name, text };
@@ -1479,7 +1850,7 @@
         populateWaSelect();
         renderTemplatesList();
         hideTemplateForm();
-        showToast("Template berhasil disimpan!");
+        showToast("Template pesan broadcast berhasil disimpan!");
       }
 
       function editTemplate(id) {
@@ -1493,17 +1864,17 @@
       }
 
       function deleteTemplate(id) {
-        showCustomConfirm("Hapus Template?", "Template pesan ini akan dihapus secara permanen.", () => {
+        showCustomConfirm("Hapus Template?", "Template pesan broadcast ini akan dihapus secara permanen.", () => {
           waTemplates = waTemplates.filter(x => x.id !== id);
           secureSave(CONFIG.STORAGE_PREFIX + 'wa-templates', waTemplates);
           populateWaSelect();
           renderTemplatesList();
-          showToast("Template berhasil dihapus.");
+          showToast("Template pesan berhasil dihapus.");
         }, 'fa-trash-can');
       }
 
       // ==========================================
-      // 8. DEPLOYMENT & PORTABILITY PWA WIDGET
+      // 8. PWA INSTALLATION SYSTEM & TIMER
       // ==========================================
       function downloadPwaFile(fileType) {
         let content = "", filename = "", mimeType = "";
@@ -1521,7 +1892,7 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        showToast(`Berkas ${filename} berhasil diunduh! Taruh berkas ini di satu tingkat root bersama index.html Anda.`, "success");
+        showToast(`Berkas "${filename}" berhasil diunduh. Letakkan berkas ini di dalam direktori utama server lokal Anda bersama index.html.`, "success");
       }
 
       function registerMainServiceWorker() {
@@ -1534,11 +1905,11 @@
               if (statusDot) statusDot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500";
             })
             .catch(() => {
-              if (statusText) statusText.textContent = "Siap Diinstal (Gunakan Kit)";
+              if (statusText) statusText.textContent = "Siap Dikonfigurasi (Gunakan Kit)";
               if (statusDot) statusDot.className = "w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse";
             });
         } else {
-          if (statusText) statusText.textContent = "Tidak Didukung Browser";
+          if (statusText) statusText.textContent = "Tidak Didukung oleh Browser Anda";
           if (statusDot) statusDot.className = "w-1.5 h-1.5 rounded-full bg-rose-500";
         }
       }
@@ -1579,10 +1950,13 @@
         document.body.appendChild(a);
         a.click();
         a.remove();
-        showToast("Cadangan berhasil diekspor!");
+        showToast("Pencadangan sistem berhasil (Backup)!");
       }
 
-      function triggerImportData() { document.getElementById('import-file-input').click(); }
+      function triggerImportData() { 
+        const importInput = document.getElementById('import-file-input');
+        if (importInput) importInput.click(); 
+      }
       
       function importBackupData(e) { 
         if(e.target.files[0]) { 
@@ -1599,7 +1973,7 @@
               secureSave(CONFIG.STORAGE_PREFIX + 'notes', notesData);
               saveAuthenticatorKeys();
               renderAll();
-              showToast("Impor Cadangan Sukses!"); 
+              showToast("Pemulihan data sistem berhasil (Restore)!"); 
             } catch(ex){
               showToast("Format berkas backup tidak valid.", "error");
             } 
@@ -1636,13 +2010,15 @@
       }
 
       // ==========================================
-      // 9. EVENT INISIALISASI UTAMA (onload)
+      // 9. WINDOW ONLOAD INITIALIZATION
       // ==========================================
       window.onload = () => {
         applyConfigToDOM();
+        
+        // Membaca Data Terenkripsi Lokal
         linksData = secureRead(CONFIG.STORAGE_PREFIX + 'links') || [...defaultSeedLinks];
         agendaData = secureRead(CONFIG.STORAGE_PREFIX + 'agendas') || [
-          { id: "ag-1", text: "Koordinasi pemutakhiran data rombel kelas 7, 8, dan 9.", done: false, createdAt: Date.now() },
+          { id: "ag-1", text: "Koordinasi pemutakhiran data rombongan belajar kelas 7, 8, dan 9.", done: false, createdAt: Date.now() },
           { id: "ag-2", text: "Verifikasi validitas residu NIK siswa pada portal VervalPD.", done: false, createdAt: Date.now() + 1 }
         ];
         notesData = secureRead(CONFIG.STORAGE_PREFIX + 'notes') || [];
@@ -1651,6 +2027,7 @@
         ];
         waTemplates = secureRead(CONFIG.STORAGE_PREFIX + 'wa-templates') || [...defaultWaTemplates];
         
+        // Memicu Render Visual Pertama Kali
         renderAll();
         initCalendar();
         populateWaSelect();
@@ -1660,7 +2037,13 @@
         registerMainServiceWorker();
         updateOnlineStatus(navigator.onLine);
 
-        // Inisialisasi Detektor Aktivitas Tunggal
+        // Pengikat Event Listener Tombol Modal Konfirmasi Kustom
+        const cancelBtn = document.getElementById('btn-confirm-cancel');
+        const okBtn = document.getElementById('btn-confirm-ok');
+        if(cancelBtn) cancelBtn.onclick = () => closeCustomConfirm(false);
+        if(okBtn) okBtn.onclick = () => closeCustomConfirm(true);
+
+        // Inisialisasi Detektor Aktivitas Tunggal (Sistem Auto-Lock)
         ['mousemove', 'keypress', 'click', 'scroll', 'touchstart'].forEach(e => {
           document.addEventListener(e, resetIdleTimer);
         });
